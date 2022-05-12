@@ -6,13 +6,141 @@
 #include <gtest/gtest.h>
 #include "src/al_arr.h"
 
-
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "threeSum*";
+    testing::FLAGS_gtest_filter = "compress*";
     return RUN_ALL_TESTS();
 
     return 0;
+}
+
+TEST(compress, basic){
+    int cnt = 0;
+    vector<char> vec, tmp;
+
+    vec = {'a'};
+    tmp = {'a'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 1);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+
+    vec = {'a', 'a'};
+    tmp = {'a', '2'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 2);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+
+    vec = {'a', 'a', 'a'};
+    tmp = {'a', '3'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 2);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+
+    vec = {'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'a'};
+    tmp = {'a', '1', '2'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 3);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+
+    vec = {'a', 'a', 'a', 'b'};
+    tmp = {'a', '3', 'b'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 3);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+
+    vec = {'a', 'a', 'a', 'b', 'c'};
+    tmp = {'a', '3', 'b', 'c'};
+    cnt = compress(vec);
+    EXPECT_EQ(cnt, 4);
+    vec.resize(tmp.size());
+    EXPECT_EQ(vec, tmp);
+}
+
+TEST(compressString, basic){
+    string res;
+
+    res = compressString("");
+    EXPECT_EQ(res, "");
+
+    res = compressString("a");
+    EXPECT_EQ(res, "a");
+
+    res = compressString("aa");
+    EXPECT_EQ(res, "aa");
+
+    res = compressString("aaa");
+    EXPECT_EQ(res, "a3");
+
+    res = compressString("aaab");
+    EXPECT_EQ(res, "aaab");
+
+    res = compressString("aaabb");
+    EXPECT_EQ(res, "a3b2");
+
+    res = compressString("aaaebbccc");
+    EXPECT_EQ(res, "a3e1b2c3");
+
+    res = compressString("aaaaaaaaaaaa");
+    EXPECT_EQ(res, "a12");
+}
+
+TEST(reverseOnlyLetters, basic){
+    string sResult;
+
+    sResult = reverseOnlyLetters("abcd");
+    EXPECT_EQ(sResult, "dcba");
+
+    sResult = reverseOnlyLetters("abc");
+    EXPECT_EQ(sResult, "cba");
+
+    sResult = reverseOnlyLetters("abc----d");
+    EXPECT_EQ(sResult, "dcb----a");
+
+    sResult = reverseOnlyLetters("ab-cd");
+    EXPECT_EQ(sResult, "dc-ba");
+
+    sResult = reverseOnlyLetters("a-bC-dEf-ghIj");
+    EXPECT_EQ(sResult, "j-Ih-gfE-dCba");
+
+    sResult = reverseOnlyLetters("Test1ng-Leet=code-Q!");
+    EXPECT_EQ(sResult, "Qedo1ct-eeLg=ntse-T!");
+
+}
+
+TEST(sortedSquares, basic){
+    vector<int> nums, out, ret;
+    {
+        nums = {1, 2, 3};
+        out = sortedSquares(nums);
+        ret = {1, 4, 9};
+        EXPECT_EQ(out, ret);
+    }
+
+    {
+        nums = {-3, -2, -1};
+        out = sortedSquares(nums);
+        ret = {1, 4, 9};
+        EXPECT_EQ(out, ret);
+    }
+
+    {
+        nums = {-2, 0, 1};
+        out = sortedSquares(nums);
+        ret = {0, 1, 4};
+        EXPECT_EQ(out, ret);
+    }
+
+    {
+        nums = {-5, -2, 0, 1, 3};
+        out = sortedSquares(nums);
+        ret = {0, 1, 4, 9, 25};
+        EXPECT_EQ(out, ret);
+    }
 }
 
 TEST(twoSum, basic_1){
@@ -42,5 +170,62 @@ TEST(threeSum, basic){
         nums = {1, -1, 0, 1, -1, 2};
         vector<vector<int>> tmp = {{-1, -1, 2}, {-1, 0, 1}};
         EXPECT_EQ(threeSum(nums), tmp);
+    }
+
+    {
+        nums = {-2, 1, 0, 1, 2};
+        vector<vector<int>> tmp = {{-2, 0, 2}, {-2, 1, 1}};
+        EXPECT_EQ(threeSum(nums), tmp);
+    }
+}
+
+TEST(mergeSortArr, basic){
+    vector<int> nums1, nums2, vec;
+    {
+        nums1 = {1, 3, 5, 0, 0, 0};
+        nums2 = {2, 2, 6};
+        mergeSortArr(nums1, 3, nums2, 3);
+        vec = {1, 2, 2, 3, 5, 6};
+        EXPECT_EQ(nums1, vec);
+    }
+
+    {
+        nums1 = {1, 3, 5, 0, 0, 0};
+        nums2 = {2, 4, 6};
+        mergeSortArr(nums1, 3, nums2, 3);
+        vec = {1, 2, 3, 4, 5, 6};
+        EXPECT_EQ(nums1, vec);
+    }
+
+    {
+        nums1 = {1, 1, 0, 0};
+        nums2 = {2, 2};
+        mergeSortArr(nums1, 2, nums2, 2);
+        vec = {1, 1, 2, 2};
+        EXPECT_EQ(nums1, vec);
+    }
+
+    {
+        nums1 = {1, 0};
+        nums2 = {2};
+        mergeSortArr(nums1, 1, nums2, 1);
+        vec = {1, 2};
+        EXPECT_EQ(nums1, vec);
+    }
+
+    {
+        nums1 = {2, 0};
+        nums2 = {1};
+        mergeSortArr(nums1, 1, nums2, 1);
+        vec = {1, 2};
+        EXPECT_EQ(nums1, vec);
+    }
+
+    {
+        nums1 = {1, 0};
+        nums2 = {1};
+        mergeSortArr(nums1, 1, nums2, 1);
+        vec = {1, 1};
+        EXPECT_EQ(nums1, vec);
     }
 }

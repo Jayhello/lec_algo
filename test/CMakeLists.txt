@@ -3,7 +3,7 @@ project(lec_algo_test)
 find_package(GTest REQUIRED)
 
 function(AddTestTarget test_exe test_src)
-    add_executable(${test_exe} ${test_src})
+    add_executable(${test_exe} ${test_src} test_comm.cpp)
     target_link_libraries(
             ${test_exe}
             algo_lib
