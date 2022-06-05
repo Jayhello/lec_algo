@@ -193,3 +193,27 @@ int compress(vector<char>& chars){
     }
     return std::min(cnt, len);
 }
+
+void adjustHeap(vector<int>& arr, int beg, int end){
+    while(2 * beg + 1 < end){
+        int i = 2 * beg + 1;
+        if(i + 1 < end and arr[i + 1] > arr[i]) i += 1;
+
+        if(arr[beg] >= arr[i])break;
+        std::swap(arr[beg], arr[i]);
+        beg = i;
+    }
+}
+
+void heapSort(vector<int>& arr){
+    if(arr.size() < 2) return;
+    int len = static_cast<int>(arr.size());
+    for(int i = (len - 2) / 2; i >= 0; --i){
+        adjustHeap(arr, i, len);
+    }
+
+    for(int i = len - 1; i > 0; --i){
+        std::swap(arr[0], arr[i]);
+        adjustHeap(arr, 0, i);
+    }
+}

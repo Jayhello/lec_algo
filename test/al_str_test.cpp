@@ -8,10 +8,50 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "reverseStr541*";
+    testing::FLAGS_gtest_filter = "isPalindrome*";
     return RUN_ALL_TESTS();
 
     return 0;
+}
+
+TEST(isPalindrome, basic){
+    EXPECT_EQ(isPalindrome("1"), true);
+    EXPECT_EQ(isPalindrome(""), true);
+    EXPECT_EQ(isPalindrome("11"), true);
+    EXPECT_EQ(isPalindrome("1  1"), true);
+    EXPECT_EQ(isPalindrome("1  1   "), true);
+    EXPECT_EQ(isPalindrome("1  1   1"), true);
+    EXPECT_EQ(isPalindrome("  1  1   1  "), true);
+    EXPECT_EQ(isPalindrome("A man, a plan, a canal: Panama"), true);
+    EXPECT_EQ(isPalindrome("race a car"), false);
+
+    EXPECT_EQ(isPalindrome("a11"), false);
+    EXPECT_EQ(isPalindrome("a11a"), true);
+    EXPECT_EQ(isPalindrome("ac 11a"), false);
+}
+
+TEST(compareVersion, basic){
+    EXPECT_EQ(compareVersion("1", "1"), 0);
+    EXPECT_EQ(compareVersion("1.1", "1.1"), 0);
+    EXPECT_EQ(compareVersion("1.01", "1.01"), 0);
+    EXPECT_EQ(compareVersion("1.001", "1.01"), 0);
+
+    EXPECT_EQ(compareVersion("1.0", "1.0.0"), 0);
+
+    EXPECT_EQ(compareVersion("0.1", "1.0"), -1);
+    EXPECT_EQ(compareVersion("1.10", "1.01"), 1);
+}
+
+TEST(transNK, basic){
+    EXPECT_EQ(transNK("A", 1), "a");
+    EXPECT_EQ(transNK("AA", 2), "aa");
+
+    EXPECT_EQ(transNK("Ab", 2), "aB");
+    EXPECT_EQ(transNK("ab", 2), "AB");
+    EXPECT_EQ(transNK("AB", 2), "ab");
+
+    EXPECT_EQ(transNK("   AB  cd ", 10), " CD  ab   ");
+    EXPECT_EQ(transNK("This is a sample", 16), "SAMPLE A IS tHIS");
 }
 
 TEST(reverseStr541, basic){

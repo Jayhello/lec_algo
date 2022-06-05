@@ -24,3 +24,5 @@ string compressString(string str);
 
 // 和上面的类似
 int compress(vector<char>& chars);
+
+void heapSort(vector<int>& arr);

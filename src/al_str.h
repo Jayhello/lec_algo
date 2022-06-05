@@ -26,3 +26,12 @@ int countSegments(string s);
 
 // https://leetcode.cn/problems/reverse-string-ii/
 string reverseStr541(string s, int k);
+
+//https://www.nowcoder.com/questionTerminal/c3120c1c1bc44ad986259c0cf0f0b80e
+string transNK(string s, int n);
+
+//https://leetcode.cn/problems/compare-version-numbers/
+int compareVersion(string version1, string version2);
+
+// https://leetcode.cn/problems/valid-palindrome/
+bool isPalindrome(string s);

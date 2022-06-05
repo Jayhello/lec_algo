@@ -8,10 +8,26 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "compress*";
+    testing::FLAGS_gtest_filter = "sort*";
     return RUN_ALL_TESTS();
 
     return 0;
+}
+
+TEST(sort, basic){
+#define COMM_SORT(arr) \
+    {                  \
+        vector<int> vec1 = arr; \
+        vector<int> vec2 = arr; \
+        heapSort(vec1);      \
+        std::stable_sort(vec2.begin(), vec2.end());\
+        EXPECT_EQ(vec1, vec2);  \
+    }
+
+    COMM_SORT(vector<int>({5, 2, 3, 4, 1}))
+    COMM_SORT(vector<int>({6, 2, 3, 2, 1}))
+    COMM_SORT(vector<int>({6, 2, 3, 2, 3}))
+    COMM_SORT(vector<int>({6, 2, 3, 2, 3, 2, 3, 6, 1, 2, 3}))
 }
 
 TEST(compress, basic){

@@ -2,6 +2,7 @@
 // Created by wenwen on 2022/4/18.
 //
 #include <algorithm>
+#include <map>
 #include "al_str.h"
 
 string encode271(const vector<string>& vStr){
@@ -153,4 +154,115 @@ string reverseStr541(string s, int k){
     }
 
     return s;
+}
+
+string transNK(string s, int n){
+    std::reverse(s.begin(), s.begin() + n);
+    for(int i = 0; i < n; ++i){
+        if(IS_SPACE(s[i]))continue;
+
+        int j = i;
+        while(j < n and NOT_SPACE(s[j])){
+            if(std::islower(s[j]))s[j] = std::toupper(s[j]);
+            else s[j] = std::tolower(s[j]);
+            ++j;
+        }
+
+        std::reverse(s.begin() + i, s.begin() + j);
+        i = j;
+    }
+
+    return s;
+}
+
+int compareVersionCmp(const char* s1, int b1, int e1, const char* s2, int b2, int e2){
+    while(b1 < e1 and b2 < e2){
+        if(s1[b1] > s2[b2]){
+            return 1;
+        } else if(s1[b1] < s2[b2]){
+            return -1;
+        }
+        ++b1;
+        ++b2;
+    }
+
+    if(b1 < e1) return 1;
+    if(b2 < e2) return -1;
+    return 0;
+}
+
+#ifdef compareVersion_V1
+int compareVersion(string version1, string version2){
+    int b1 = 0, b2 = 0;
+    int len1 = static_cast<int>(version1.size()), len2 = static_cast<int>(version2.size());
+
+    while(b1 < len1 and b2 < len2){
+        while(b1 < len1 and '0' == version1[b1])++b1;
+        int e1 = b1 + 1;
+        while(e1 < len1 and '.' != version1[e1])++e1;
+
+        while(b2 < len2 and '0' == version2[b2])++b2;
+        int e2 = b2 + 1;
+        while(e2 < len2 and '.' != version2[e2])++e2;
+
+        int tmp = compareVersionCmp(version1.data(), b1, e1, version2.data(), b2, e2);
+        if(tmp) return tmp;
+
+        b1 = e1 + 1;
+        b2 = e2 + 1;
+    }
+
+    while(b1 < len1 and (version1[b1] == '0' or version1[b1] == '.'))++b1;
+    while(b2 < len2 and (version2[b2] == '0' or version2[b2] == '.'))++b2;
+
+    if(b1 < len1) return 1;
+    if(b2 < len2) return -1;
+
+    return 0;
+}
+
+#else
+
+int compareVersion(string version1, string version2){
+    int b1 = 0, b2 = 0;
+    int len1 = static_cast<int>(version1.size()), len2 = static_cast<int>(version2.size());
+
+    while(b1 < len1 or b2 < len2){
+        int n1 = 0;
+        while(b1 < len1 and version1[b1] != '.'){
+            n1 = 10 * n1 + (version1[b1++] - '0');
+        }
+
+        int n2 = 0;
+        while(b2 < len2 and version2[b2] != '.'){
+            n2 = 10 * n2 + (version2[b2++] - '0');
+        }
+
+        if(n1 > n2) return 1;
+        if(n1 < n2) return -1;
+        ++b1;
+        ++b2;
+    }
+
+    return 0;
+}
+
+#endif
+
+
+#define ALPHA_OR_NUM(ch) (std::isalpha(ch) or std::isdigit(ch))
+#define IG_EQ_CHAR(c1, c2) (std::tolower(c1) == std::tolower(c2))
+
+bool isPalindrome(string s){
+    int i = 0, j = static_cast<int>(s.size()) - 1;
+    while(i < j){
+        if(not ALPHA_OR_NUM(s[i])){++i;continue;}
+        if(not ALPHA_OR_NUM(s[j])){--j;continue;}
+
+        if(not IG_EQ_CHAR(s[i], s[j]))return false;
+        ++i;
+        --j;
+    }
+
+    return true;
 }
