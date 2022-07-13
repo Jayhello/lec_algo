@@ -5,6 +5,8 @@
 
 #include <sstream>
 #include <string>
+#include <cmath>
+
 using namespace std;
 
 template<typename Container>
@@ -16,4 +18,8 @@ string tostr(const Container& c){
     }
     ss << "}";
     return ss.str();
+}
+
+inline bool floatEqual(float a, float b, float EPSILON = 0.000001){
+    return std::fabs(a - b) < EPSILON;
 }

@@ -53,3 +53,39 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2){
 
     return dummy.next;
 }
+
+#ifdef isPalindrome_V1
+bool isPalindrome(ListNode* head){
+    stack<ListNode*> sta;
+    ListNode* tmp = head;
+    while(tmp){
+        sta.push(tmp);
+        tmp = tmp->next;
+    }
+
+    while(not sta.empty() and sta.top()->val == head->val){
+        sta.pop();
+        head = head->next;
+    }
+
+    return sta.empty();
+}
+#endif
+
+bool isPalindrome(ListNode* head){
+    stack<ListNode*> sta;
+    ListNode* tmp = head;
+    while(tmp){
+        sta.push(tmp);
+        tmp = tmp->next;
+    }
+
+    int cnt = int(sta.size()) / 2;
+    while(cnt and sta.top()->val == head->val){
+        sta.pop();
+        head = head->next;
+        --cnt;
+    }
+
+    return 0 == cnt;
+}

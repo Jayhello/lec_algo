@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <map>
 #include "al_str.h"
+#include "al_comm.h"
 
 string encode271(const vector<string>& vStr){
     string res;
@@ -265,4 +266,215 @@ bool isPalindrome(string s){
     }
 
     return true;
+}
+
+int longestPalindrome(string s){
+    int cnt = 0;
+    map<char, int> mCharCnt;
+    for(auto c : s){
+        ++mCharCnt[c];
+    }
+
+    bool used = false;
+    for(const auto& kv : mCharCnt){
+        if(kv.second % 2){
+            if(not used){
+                cnt += kv.second;
+                used = true;
+            }else{
+                cnt += (kv.second - 1);
+            }
+        }else{
+            cnt += kv.second;
+        }
+    }
+
+    return cnt;
+}
+
+bool canPermutePalindrome(string s){
+    map<char, int> ch_cnt;
+    for(auto c : s)++ch_cnt[c];
+    int cnt = 0;
+    for(const auto& item : ch_cnt){
+        if(item.second % 2)++cnt;
+        if(cnt > 1)return false;
+    }
+    return true;
+}
+
+bool isPalindrome(int x){
+    if(x < 0) return false;
+
+    int n = 0;
+    while(x){
+        n = 10 * n + x % 10;
+        x /= 10;
+    }
+
+    return x == n;
+}
+
+bool validPalindrome680(string s){
+    int len = int(s.size());
+    int l = 0, r = len - 1;
+
+    auto partPalindrome = [&s](int l, int r){
+        while(l < r){
+            if(s[l] == s[r]){
+                ++l;--r;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    };
+
+    while(l < r){
+        if(s[l] == s[r]){
+            ++l;
+            --r;
+        }else{
+            return partPalindrome(l, r - 1) or partPalindrome(l + 1, r);
+        }
+    }
+
+    return true;
+}
+
+string addStrings(string num1, string num2){
+    string res;
+    int i1 = int(num1.size()) - 1, i2 = int(num2.size()) - 1;
+    int carry = 0;
+    while(i1 >= 0 or i2 >= 0 or carry > 0){
+        int n1 = (i1 >= 0 ? (num1[i1--] - '0') : 0);
+        int n2 = (i2 >= 0 ? (num2[i2--] - '0') : 0);
+        int sum = n1 + n2 + carry;
+        res.push_back((sum) % 10 + '0');
+        carry = (sum) / 10;
+    }
+
+    std::reverse(res.begin(), res.end());
+    return res;
+}
+
+string multiply43(string num1, string num2){
+    if("0" == num1 or "0" == num2)return "0";
+
+    int len1 = int(num1.size()), len2 = int(num2.size());
+    int carry = 0;
+    vector<int> nums(len1 + len2, 0);
+
+    for(int i = len1 - 1; i >= 0; --i){
+        int n1 = num1[i] - '0';
+        for(int j = len2 - 1; j >= 0; --j){
+            int n2 = num2[j] - '0';
+            int idx = i + j + 1;
+            int sum = n1 * n2 + carry + nums[idx];
+
+            nums[idx] = sum % 10;
+            carry = sum / 10;
+        }
+
+        if(carry){
+            nums[i] = carry;
+            carry = 0;
+        }
+    }
+
+    int i = (nums[0] == 0 ? 1 : 0);
+    string res;
+    while(i < nums.size())res.push_back(nums[i++] + '0');
+
+    return res;
+}
+
+string powOf2NK(int n){
+    string s = "1";
+    for(int i = 1; i <= n; ++i){
+        int len = s.size(), carry = 0;
+        for(int j = len - 1; j >= 0; --j){
+            int sum = 2 * (s[j] - '0') + carry;
+            s[j] = (sum % 10 + '0');
+            carry = sum / 10;
+        }
+
+        if(carry)s = std::to_string(carry) + s;
+    }
+
+    return s;
+}
+
+// "32.123" -> 32.123
+float StrToFloat(const std::string& str){
+    float f = 0;
+    int len = int(str.size()), i = 0;
+
+    for(; i < len and '.' != str[i]; ++i){
+        f = f * 10 + (str[i] - '0');
+    }
+
+    if('.' == str[i])++i;
+
+    float base = 10.0;
+    while(i < len){
+        f += ((str[i++] - '0') / base);
+        base *= 10;
+    }
+
+    return f;
+}
+
+string float2String(float f){
+    if(floatEqual(f, 0)) return "0";
+
+    string res;
+    int a = int(f);
+    while(a){
+        res.push_back(a % 10 + '0');
+        a /= 10;
+    }
+
+    std::reverse(res.begin(), res.end());
+    f -= int(f);
+    if(floatEqual(f, 0)){
+        return res;
+    }
+
+    res.push_back('.');
+    while(not floatEqual(f, 0)){
+        f *= 10;
+        res.push_back(int(f) % 10 + '0');
+        f -= (int(f) % 10);
+    }
+
+    return res;
+}
+
+// 221.123.10.5
+uint32_t ip2Int(const string& sIP){
+    uint32_t ret = 0, n = 0;
+    int len = static_cast<int>(sIP.size());
+
+    for(int i = 0; i < len; ++i){
+        if('.' == sIP[i]){
+            ret = (ret << 8) | n;
+            n = 0;
+        }else{
+            n = 10 * n + (sIP[i] - '0');
+        }
+    }
+
+    ret = (ret << 8) | n;
+    return ret;
+}
+
+string int2ip(uint32_t iIp){
+    string res;
+    res.append(to_string(iIp >> 24)).append(".")
+       .append(to_string((iIp >> 16) & 255)).append(".")
+       .append(to_string((iIp >> 8) & 255)).append(".")
+       .append(to_string(iIp & 255));
+
+    return res;
 }

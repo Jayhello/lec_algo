@@ -248,27 +248,6 @@ struct context {
     int ebx;
 };
 
-// the different states a process can be in
-enum proc_state { UNUSED, EMBRYO, SLEEPING,
-    RUNNABLE, RUNNING, ZOMBIE };
-
-// the information xv6 tracks about each process
-// including its register context and state
-struct proc {
-    enum proc_state state; // Process state
-    int pid; // Process ID
-    struct context context; // Switch here to run process
-    char *mem; // Start of process memory
-    uint sz; // Size of process memory
-    char *kstack; // Bottom of kernel stack for this process
-
-    struct proc *parent; // Parent process
-
-    void *chan; // If non-zero, sleeping on chan
-
-    struct file *ofile[NOFILE]; // Open files
-    struct inode *cwd; // Current directory
-};
 
 int calcExpress2(const string& sExpress){
     int len = int(sExpress.size()), i = 0;

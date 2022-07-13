@@ -9,3 +9,5 @@ ListNode* mergeKLists(vector<ListNode*>& lists);
 
 ListNode* mergeTwoLists(ListNode* list1, ListNode* list2);
 
+bool isPalindrome(ListNode* head);
+

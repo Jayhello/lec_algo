@@ -8,10 +8,92 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "isPalindrome*";
+    testing::FLAGS_gtest_filter = "int2ip*";
     return RUN_ALL_TESTS();
 
     return 0;
+}
+
+TEST(int2ip, basic) {
+    EXPECT_EQ(int2ip(3715828229), "221.123.10.5");
+    EXPECT_EQ(int2ip(0), "0.0.0.0");
+    EXPECT_EQ(int2ip(16843009), "1.1.1.1");
+    EXPECT_EQ(int2ip(33686018), "2.2.2.2");
+};
+
+TEST(ip2Int, basic) {
+    EXPECT_EQ(ip2Int("221.123.10.5"), 3715828229);
+    EXPECT_EQ(ip2Int("0.0.0.0"), 0);
+    EXPECT_EQ(ip2Int("1.1.1.1"), 16843009);
+    EXPECT_EQ(ip2Int("1.1.1.2"), 16843010);
+    EXPECT_EQ(ip2Int("2.2.2.2"), 33686018);
+
+};
+
+TEST(float2String, basic) {
+    EXPECT_EQ(float2String(2.13), "2.13");
+    EXPECT_EQ(float2String(1.00), "1");
+    EXPECT_EQ(float2String(0.0123), "0.0123");
+    EXPECT_EQ(float2String(1230.0123), "1230.0123");
+};
+
+TEST(StrToFloat, basic) {
+    EXPECT_TRUE(floatEqual(StrToFloat("2.13"), 2.13));
+    EXPECT_TRUE(floatEqual(StrToFloat("323.13"), 323.13));
+    EXPECT_TRUE(floatEqual(StrToFloat("0"), 0));
+    EXPECT_TRUE(floatEqual(StrToFloat("123.9999"), 123.9999));
+};
+
+TEST(powOf2NK, basic) {
+    EXPECT_EQ(powOf2NK(1), "2");
+    EXPECT_EQ(powOf2NK(2), "4");
+    EXPECT_EQ(powOf2NK(8), "256");
+    EXPECT_EQ(powOf2NK(10), "1024");
+    EXPECT_EQ(powOf2NK(32), "4294967296");
+}
+
+
+TEST(multiply43, basic) {
+    EXPECT_EQ(multiply43("1", "2"), "2");
+    EXPECT_EQ(multiply43("1", "0"), "0");
+    EXPECT_EQ(multiply43("2", "3"), "6");
+    EXPECT_EQ(multiply43("7", "9"), "63");
+    EXPECT_EQ(multiply43("99", "38"), "3762");
+    EXPECT_EQ(multiply43("123", "123"), "15129");
+
+    EXPECT_EQ(multiply43("999", "888"), to_string(999 * 888));
+    EXPECT_EQ(multiply43("9919", "8188"), to_string(9919 * 8188));
+}
+
+TEST(addStrings, basic) {
+    EXPECT_EQ(addStrings("1", "2"), "3");
+    EXPECT_EQ(addStrings("0", "0"), "0");
+
+    EXPECT_EQ(addStrings("4", "8"), "12");
+    EXPECT_EQ(addStrings("1", "99"), "100");
+    EXPECT_EQ(addStrings("11", "99"), "110");
+    EXPECT_EQ(addStrings("1234", "1234"), "2468");
+}
+
+TEST(validPalindrome680, basic){
+    EXPECT_EQ(validPalindrome680("a"), true);
+    EXPECT_EQ(validPalindrome680("aa"), true);
+    EXPECT_EQ(validPalindrome680("aab"), true);
+    EXPECT_EQ(validPalindrome680("caa"), true);
+    EXPECT_EQ(validPalindrome680("aca"), true);
+    EXPECT_EQ(validPalindrome680("abca"), true);
+
+    EXPECT_EQ(validPalindrome680("abc"), false);
+}
+
+TEST(longestPalindrome, basic){
+    EXPECT_EQ(longestPalindrome("a"), 1);
+    EXPECT_EQ(longestPalindrome("aa"), 2);
+    EXPECT_EQ(longestPalindrome("baa"), 3);
+    EXPECT_EQ(longestPalindrome("baac"), 3);
+    EXPECT_EQ(longestPalindrome("baba"), 4);
+    EXPECT_EQ(longestPalindrome("badba"), 5);
+    EXPECT_EQ(longestPalindrome("baddba"), 6);
 }
 
 TEST(isPalindrome, basic){
