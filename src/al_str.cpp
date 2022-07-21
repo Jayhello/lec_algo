@@ -478,3 +478,288 @@ string int2ip(uint32_t iIp){
 
     return res;
 }
+
+vector<string> Split(const string& str, char ch){
+    int i = 0, len = static_cast<int>(str.size());
+    vector<string> vec;
+
+    while(i < len){
+        while(i < len and ch == str[i])++i;
+
+        if(i >= len) break;
+
+        string tmp;
+        while(i < len and ch != str[i])tmp.push_back(str[i++]);
+        vec.push_back(tmp);
+    }
+
+    return vec;
+}
+
+vector<string> splitString(const std::string& str, const std::string& split){
+    vector<string> vec_str;
+    int i = 0, len1 = int(str.size()), len2 = int(split.size());
+
+    auto sub_eq = [&](int j){
+        int k = 0;
+        while(j < len1 and k < len2 and str[j] == split[k]){
+            ++j;++k;
+        }
+        return k >= len2;
+    };
+
+    while(i < len1){
+        while(i < len1 and sub_eq(i)) i += len2;
+        if(i >= len1) break;
+
+        string tmp;
+        while(i < len1 and not sub_eq(i)){
+            tmp.push_back(str[i++]);
+        }
+
+        vec_str.push_back(tmp);
+    }
+
+    return vec_str;
+}
+
+int strStr(string src, string sub){
+    int len1 = int(src.size()), len2 = int(sub.size());
+    for(int i = 0; i <= len1 - len2; ++i){
+        int j = 0;
+        while(j < len2 and sub[j] == src[i + j])++j;
+        if(j == len2)return i;
+    }
+
+    return -1;
+}
+
+#ifdef UASE_V1
+string lengthOfLongestSubstring(string s){
+    if(s.size() < 2) return s;
+    int len = int(s.size());
+    int beg = 0, end = 0;
+
+    for(int i = 0; i < len - 1; ++i){
+        int j = i + 1;
+        for(; j < len; ++j){
+            auto it = std::find(s.begin() + i, s.begin() + j, s[j]);
+            if(it != (s.begin() + j))break;
+        }
+
+        if((j - i) > (end - beg)){
+            beg = i;
+            end = j;
+        }
+    }
+
+    return s.substr(beg, end - beg);
+}
+#endif
+
+string lengthOfLongestSubstring(string s){
+    if(s.size() < 2) return s;
+    int len = int(s.size());
+    int beg = 0, end = 0, i = 0, j = 1;
+    auto find_ch = [&s](int b, int e, char ch){
+        while(b < e and s[b] != ch)++b;
+        return b;
+    };
+
+    while(j < len){
+        int k = find_ch(i, j, s[j]);
+        if(k != j){
+            i = k + 1;
+            j += 1;
+        }else{
+            ++j;
+        }
+
+        if(j - i > end - beg){
+            beg = i;
+            end = j;
+        }
+    }
+
+    return s.substr(beg, end - beg);
+}
+
+//#define replaceSpace_v1
+
+#ifdef replaceSpace_v1
+// 输入：s = "We are happy."
+// 输出："We%20are%20happy."
+string replaceSpace(string s){
+    string res;
+    for(char ch : s){
+        if(' ' == ch){
+            res.append("%20");
+        }else{
+            res.push_back(ch);
+        }
+    }
+
+    return res;
+}
+#endif
+
+string replaceSpace(string s){
+    int old_len = int(s.size());
+    int count = 0;
+    for(auto c : s)if(' ' == c)++count;
+    if(0 == count) return s;
+
+    int new_len = old_len + 2 * count;
+    s.resize(new_len);
+    int i = old_len - 1, j = new_len - 1;
+
+    while(i >= 0){
+        if(' ' == s[i]){
+            s[j--] = '0';
+            s[j--] = '2';
+            s[j--] = '%';
+            --i;
+        }else{
+            s[j--] = s[i--];
+        }
+    }
+
+    return s;
+}
+
+bool rotateString(string s, string goal){
+    if(s.size() != goal.size()) return false;
+
+    int len = int(s.size());
+    for(int i = 0; i < len; ++i){
+        int c = 0;
+        for(; c < len; ++c){
+            if(s[(i + c) % len] != goal[c])break;
+        }
+
+        if(c == len) return true;
+    }
+
+    return false;
+}
+
+bool repeatedSubstringPattern(string s){
+    int len = int(s.size());
+
+    auto partial_eq = [&s, len](int sub_len){
+        int count = len / sub_len;
+        for(int c = 1; c < count; ++c){
+            for(int i = 0; i < sub_len; ++i){
+                if(s[i] != s[c * sub_len + i])return false;
+            }
+        }
+
+        return true;
+    };
+
+    for(int sub_len = len / 2; sub_len >= 1; --sub_len){
+        if(len % sub_len) continue;
+
+        if(partial_eq(sub_len))return true;
+    }
+
+    return false;
+}
+
+int repeatedStringMatch(string a, string b){
+    for(auto c : b){
+        if(a.find(c) == std::string::npos) return -1;
+    }
+
+    int len1 = int(a.size()), len2 = int(b.size());
+    int max_count = 1 + len2 / len1 + (len2 % len1 ? 1 : 0);
+
+    string tmp = a;
+    for(int c = 1; c <= max_count; ++c){
+        if(tmp.size() < len2){
+            tmp += a;
+            continue;
+        }
+
+        if(std::string::npos != tmp.find(b))return c;
+        tmp += a;
+    }
+
+    return -1;
+}
+
+bool isLongPressedName(string name, string typed){
+    int len1 = int(name.size()), len2 = int(typed.size());
+    int i = 0, j = 0;
+    while(i < len1 and j < len2){
+        char a = name[i];
+        int c1 = 1, c2 = 0;
+        while(i < len1 - 1 and a == name[i + 1]){++c1;++i;}
+        while(j < len2 and a == typed[j]){++c2;++j;}
+
+        if(c2 < c1)return false;
+        ++i;
+    }
+
+    return i >= len1 and j >= len2;
+}
+
+
+// s1 是否可以删除某些字符得到 s2(即s2是否是s1的子字符串)
+// s1 = "abpcplea", s2 = "apple"
+bool helper524(const string& src, const string& sub){
+    int len = int(src.size());
+    auto find_idx = [&src, len](char ch, int beg){
+        while(beg < len and src[beg] != ch)++beg;
+        return beg;
+    };
+
+    int idx = 0, sum = 0;
+    for(auto ch : sub){
+        idx = find_idx(ch, idx);
+        if(idx >= len)return false;
+        sum += idx;
+    }
+
+    return true;
+}
+bool CanDel(const string& src, const string& sub){
+    int len1 = src.size(), len2 = sub.size();
+    int i = 0, j = 0;
+    while(i < len1 and j < len2){
+        if(sub[j] == src[i]){
+            ++j;
+        }
+        ++i;
+    }
+
+    return j == len2;
+}
+string findLongestWord(string s, vector<string>& dictionary){
+    string res;
+
+    for(const auto& sub : dictionary){
+        if(helper524(s, sub)){
+            return res;
+        }
+    }
+
+    return res;
+}
+
+void helper844(const string& s1, string& dst){
+    for(auto c : s1){
+        if('#' == c){
+            if(not dst.empty())dst.pop_back();
+        }else{
+            dst.push_back(c);
+        }
+    }
+}
+
+bool backspaceCompare(string s, string t){
+    string s1, s2;
+    helper844(s, s1);
+    helper844(t, s2);
+    return s1 == s2;
+}

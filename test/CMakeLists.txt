@@ -22,3 +22,5 @@ AddTestTarget(al_heap_test al_heap_test.cpp)
 AddTestTarget(al_list_test al_list_test.cpp)
 AddTestTarget(al_que_sta_test al_que_sta_test.cpp)
 
+AddTestTarget(al_slip_wnd al_slip_wnd.cpp)
+

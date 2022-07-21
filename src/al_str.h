@@ -61,6 +61,45 @@ float StrToFloat(const std::string& str);
 
 string float2String(float f);
 
+//https://www.nowcoder.com/questionTerminal/66ca0e28f90c42a196afd78cc9c496ea
 uint32_t ip2Int(const string& sIP);
 
 string int2ip(uint32_t iIp);
+
+// Split("abc.def.ghc", '.') ->   {abc, def, ghc}
+// Split("/home/xy/code", '/') -> {home, xy, code}
+
+vector<string> Split(const string& str, char ch);
+
+;  // "12341256", "12" -> {"34", "56"}
+;  // "111112", "11" -> {"12"}
+;  // "56123412", "12" -> {"56", "34"}
+vector<string> splitString(const std::string& str, const std::string& split);
+
+//https://leetcode.cn/problems/Implement-strStr/
+int strStr(string haystack, string needle);
+
+//https://leetcode.com/problems/longest-substring-without-repeating-characters/
+string lengthOfLongestSubstring(string s);
+
+//https://leetcode.cn/problems/ti-huan-kong-ge-lcof/
+string replaceSpace(string s);
+
+//https://leetcode.cn/problems/rotate-string/
+bool rotateString(string s, string goal);
+
+//https://leetcode.cn/problems/repeated-substring-pattern/
+bool repeatedSubstringPattern(string s);
+
+//https://leetcode.cn/problems/repeated-string-match/
+int repeatedStringMatch(string a, string b);
+
+//https://leetcode-cn.com/problems/long-pressed-name/
+bool isLongPressedName(string name, string typed);
+
+//https://leetcode.cn/problems/longest-word-in-dictionary-through-deleting/
+string findLongestWord(string s, vector<string>& dictionary);
+
+
+// https://leetcode.cn/problems/backspace-string-compare/
+bool backspaceCompare(string s, string t);

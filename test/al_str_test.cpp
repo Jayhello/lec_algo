@@ -4,15 +4,119 @@
 #include "src/al_str.h"
 #include "test_comm.h"
 #include <iostream>
+#include <vector>
 #include <gtest/gtest.h>
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "int2ip*";
+    testing::FLAGS_gtest_filter = "isLongPressedName*";
     return RUN_ALL_TESTS();
 
     return 0;
 }
+
+TEST(isLongPressedName, basic) {
+    EXPECT_EQ(isLongPressedName("a", "a"), true);
+    EXPECT_EQ(isLongPressedName("a", "aa"), true);
+    EXPECT_EQ(isLongPressedName("a", "aaa"), true);
+
+    EXPECT_EQ(isLongPressedName("ab", "aab"), true);
+    EXPECT_EQ(isLongPressedName("ab", "aabb"), true);
+
+    EXPECT_EQ(isLongPressedName("a", "b"), false);
+    EXPECT_EQ(isLongPressedName("acc", "aac"), false);
+
+};
+
+TEST(repeatedSubstringPattern, basic) {
+    EXPECT_EQ(repeatedSubstringPattern("a"), true);
+    EXPECT_EQ(repeatedSubstringPattern("aa"), true);
+    EXPECT_EQ(repeatedSubstringPattern("aaa"), true);
+
+    EXPECT_EQ(repeatedSubstringPattern("abab"), true);
+    EXPECT_EQ(repeatedSubstringPattern("ababab"), true);
+    EXPECT_EQ(repeatedSubstringPattern("abcabcabc"), true);
+    EXPECT_EQ(repeatedSubstringPattern("abcabc"), true);
+
+    EXPECT_EQ(repeatedSubstringPattern("ab"), false);
+    EXPECT_EQ(repeatedSubstringPattern("abc"), false);
+    EXPECT_EQ(repeatedSubstringPattern("abac"), false);
+    EXPECT_EQ(repeatedSubstringPattern("ababc"), false);
+    EXPECT_EQ(repeatedSubstringPattern("ababcc"), false);
+};
+
+TEST(replaceSpace, basic) {
+    EXPECT_EQ(replaceSpace("a"), "a");
+    EXPECT_EQ(replaceSpace("ab"), "ab");
+
+    EXPECT_EQ(replaceSpace("a b"), "a%20b");
+    EXPECT_EQ(replaceSpace("a  b"), "a%20%20b");
+    EXPECT_EQ(replaceSpace(" ab"), "%20ab");
+    EXPECT_EQ(replaceSpace(" ab "), "%20ab%20");
+    EXPECT_EQ(replaceSpace("ab "), "ab%20");
+    EXPECT_EQ(replaceSpace("a b "), "a%20b%20");
+};
+
+TEST(lengthOfLongestSubstring, basic) {
+    EXPECT_EQ(lengthOfLongestSubstring("abcce"), "abc");
+    EXPECT_EQ(lengthOfLongestSubstring("aaa"), "a");
+    EXPECT_EQ(lengthOfLongestSubstring("a"), "a");
+    EXPECT_EQ(lengthOfLongestSubstring("aa"), "a");
+    EXPECT_EQ(lengthOfLongestSubstring("xyabxz"), "yabxz");
+    EXPECT_EQ(lengthOfLongestSubstring("pwwkew"), "wke");
+};
+
+TEST(strStr, basic) {
+    EXPECT_EQ(strStr("12341256", "12"), 0);
+    EXPECT_EQ(strStr("abcde", "cd"), 2);
+    EXPECT_EQ(strStr("abcde", "de"), 3);
+    EXPECT_EQ(strStr("abcde", "abcde"), 0);
+    EXPECT_EQ(strStr("abcde", "cde"), 2);
+
+    EXPECT_EQ(strStr("12", "123"), -1);
+    EXPECT_EQ(strStr("12edf", "2d"), -1);
+
+};
+
+TEST(splitString, basic) {
+    std::vector<string> vec;
+    vec = {"34", "56"};
+    EXPECT_EQ(splitString("12341256", "12"), vec);
+
+    vec = {"12"};
+    EXPECT_EQ(splitString("111112", "11"), vec);
+
+    vec = {"56", "34"};
+    EXPECT_EQ(splitString("56123412", "12"), vec);
+
+    vec = {"1", "23"};
+    EXPECT_EQ(splitString("12223", "22"), vec);
+
+    vec = {"1234"};
+    EXPECT_EQ(splitString("1234", "22"), vec);
+};
+
+TEST(Split, basic){
+    std::vector<string> vec;
+    vec = {"abc", "def", "ghc"};
+    EXPECT_EQ(Split("abc.def.ghc", '.'), vec);
+
+    vec = {"home", "xy", "code"};
+    EXPECT_EQ(Split("/home///xy//code", '/'), vec);
+
+    vec = {"home", "xy", "code"};
+    EXPECT_EQ(Split("//home///xy//code", '/'), vec);
+
+    vec = {"home", "xy", "code"};
+    EXPECT_EQ(Split("//home///xy//code////", '/'), vec);
+
+    vec = {"abc"};
+    EXPECT_EQ(Split("abc", '.'), vec);
+
+    vec = {"1", "2", "3"};
+    EXPECT_EQ(Split("1.2.3", '.'), vec);
+};
+
 
 TEST(int2ip, basic) {
     EXPECT_EQ(int2ip(3715828229), "221.123.10.5");
