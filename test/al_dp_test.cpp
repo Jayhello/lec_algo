@@ -8,9 +8,154 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "numSquares*";
+//    testing::FLAGS_gtest_filter = "findLength*";
+    testing::FLAGS_gtest_filter = "maxProduct*";
     return RUN_ALL_TESTS();
 }
+
+TEST(maxProduct, basic) {
+    EXPECT_EQ(maxProduct({1}), 1);
+    EXPECT_EQ(maxProduct({1, 1}), 1);
+    EXPECT_EQ(maxProduct({2,3,-2,4}), 6);
+    EXPECT_EQ(maxProduct({-2,0,-1}), 0);
+    EXPECT_EQ(maxProduct({-2,-3,-1}), 6);
+    EXPECT_EQ(maxProduct({-2,3,-1}), 6);
+    EXPECT_EQ(maxProduct({-2,3,-1, -3}), 9);
+    EXPECT_EQ(maxProduct({0, -2, -3}), 6);
+};
+
+TEST(maximalSquare, basic) {
+    EXPECT_EQ(maximalSquare({{'1','0','1','0','0'},{'1','0','1','1','1'},
+                             {'1','1','1','1','1'}, {'1','0','0','1','0'}}), 4);
+
+    EXPECT_EQ(maximalSquare({{'1','1','1','1','1'},{'1','1','1','1','1'},
+                             {'1','1','1','1','1'}, {'1','0','0','1','0'}}), 9);
+};
+
+TEST(minPathSum, basic) {
+    EXPECT_EQ(minPathSum({{1,3,1},{1,5,1}, {4,2,1}}), 7);
+    EXPECT_EQ(minPathSum({{1,2,3},{4,5,6}}), 12);
+};
+
+TEST(uniquePathsWithObstacles, basic) {
+    EXPECT_EQ(uniquePathsWithObstacles({{0,0,0},{0,1,0}, {0,0,0}}), 2);
+};
+
+TEST(uniquePaths, basic) {
+    EXPECT_EQ(uniquePaths(7, 3), 28);
+    EXPECT_EQ(uniquePaths(3, 7), 28);
+    EXPECT_EQ(uniquePaths(3, 3), 6);
+    EXPECT_EQ(uniquePaths(3, 2), 3);
+};
+
+TEST(wordBreak, basic) {
+    EXPECT_EQ(wordBreak("a", {"a", "b"}), true);
+    EXPECT_EQ(wordBreak("a", {"c", "b"}), false);
+    EXPECT_EQ(wordBreak("a", {"c", "aa"}), false);
+    EXPECT_EQ(wordBreak("ab", {"a", "b"}), true);
+    EXPECT_EQ(wordBreak("acb", {"a", "b"}), false);
+    EXPECT_EQ(wordBreak("acb", {"ca", "b"}), false);
+    EXPECT_EQ(wordBreak("leetcode", {"leet", "code"}), true);
+    EXPECT_EQ(wordBreak("applepenapple", {"apple", "pen"}), true);
+    EXPECT_EQ(wordBreak("catsandog", {"cats", "dog", "sand", "and", "cat"}), false);
+};
+
+TEST(longestPalindromeSubseq, basic) {
+    EXPECT_EQ(longestPalindromeSubseq("a"), 1);
+    EXPECT_EQ(longestPalindromeSubseq("aa"), 2);
+    EXPECT_EQ(longestPalindromeSubseq("aaa"), 3);
+    EXPECT_EQ(longestPalindromeSubseq("bbbab"), 4);
+    EXPECT_EQ(longestPalindromeSubseq("cbbd"), 2);
+    EXPECT_EQ(longestPalindromeSubseq("cbbdb"), 3);
+    EXPECT_EQ(longestPalindromeSubseq("cbbdbc"), 5);
+
+};
+
+TEST(longestPalindrome, basic) {
+    EXPECT_EQ(longestPalindrome("a"), "a");
+    EXPECT_EQ(longestPalindrome("aa"), "aa");
+    EXPECT_EQ(longestPalindrome("aaa"), "aaa");
+    EXPECT_EQ(longestPalindrome("cbbd"), "bb");
+    EXPECT_EQ(longestPalindrome("cbbc"), "cbbc");
+    EXPECT_EQ(longestPalindrome("cbabc"), "cbabc");
+};
+
+TEST(countSubstrings, basic) {
+    EXPECT_EQ(countSubstrings("a"), 1);
+    EXPECT_EQ(countSubstrings("abc"), 3);
+    EXPECT_EQ(countSubstrings("aaaaa"), 15);
+    EXPECT_EQ(countSubstrings("aaa"), 6);
+};
+
+TEST(findLength, basic) {
+    EXPECT_EQ(findLength({1}, {1}), 1);
+    EXPECT_EQ(findLength({1}, {0}), 0);
+    EXPECT_EQ(findLength({0}, {1}), 0);
+    EXPECT_EQ(findLength({1}, {1, 1}), 1);
+    EXPECT_EQ(findLength({1, 1}, {1}), 1);
+    EXPECT_EQ(findLength({1, 1}, {1, 1}), 2);
+    EXPECT_EQ(findLength({1, 1}, {1, 1, 1}), 2);
+    EXPECT_EQ(findLength({1, 1, 1}, {1, 1, 1}), 3);
+    EXPECT_EQ(findLength({1,2,3,2,1}, {3,2,1,4,7}), 3);
+    EXPECT_EQ(findLength({1,2,3,2,1, 3, 4}, {1,2,3,4,2, 1, 3 ,4}), 4);
+    EXPECT_EQ(findLength({1,2,3,2,1}, {3,2,1,4}), 3);
+};
+
+TEST(minDistance, basic) {
+    EXPECT_EQ(minDistance("a", "a"), 0);
+    EXPECT_EQ(minDistance("sea", "eat"), 2);
+    EXPECT_EQ(minDistance("leetcode", "etco"), 4);
+    EXPECT_EQ(minDistance("aa", "aa"), 0);
+    EXPECT_EQ(minDistance("aa", "a"), 1);
+    EXPECT_EQ(minDistance("a", "aa"), 1);
+
+    EXPECT_EQ(minDistance("abc", "ade"), 4);
+    EXPECT_EQ(minDistance("abc", "a"), 2);
+    EXPECT_EQ(minDistance("a", "ab"), 1);
+    EXPECT_EQ(minDistance("a", "cd"), 3);
+};
+
+TEST(minimumDeleteSum, basic) {
+    EXPECT_EQ(minimumDeleteSum("a", "a"), 0);
+    EXPECT_EQ(minimumDeleteSum("sea", "eat"), 231);
+    EXPECT_EQ(minimumDeleteSum("delete", "leet"), 403);
+    EXPECT_EQ(minimumDeleteSum("az", "za"), 194);
+};
+
+TEST(longestCommonSubsequence, basic) {
+    EXPECT_EQ(longestCommonSubsequence("", ""), 0);
+    EXPECT_EQ(longestCommonSubsequence("a", "a"), 1);
+    EXPECT_EQ(longestCommonSubsequence("a", "ab"), 1);
+    EXPECT_EQ(longestCommonSubsequence("a", "aba"), 1);
+    EXPECT_EQ(longestCommonSubsequence("a", "aa"), 1);
+    EXPECT_EQ(longestCommonSubsequence("aa", "aa"), 2);
+
+    EXPECT_EQ(longestCommonSubsequence("abc", "ab"), 2);
+    EXPECT_EQ(longestCommonSubsequence("abc", "abc"), 3);
+    EXPECT_EQ(longestCommonSubsequence("agbdc", "abc"), 3);
+};
+
+TEST(findLengthOfLCIS, basic) {
+    EXPECT_EQ(findLengthOfLCIS({1}), 1);
+    EXPECT_EQ(findLengthOfLCIS({1, 1}), 1);
+    EXPECT_EQ(findLengthOfLCIS({1, 2, 3}), 3);
+    EXPECT_EQ(findLengthOfLCIS({1, 2, 1, 3}), 2);
+    EXPECT_EQ(findLengthOfLCIS({1, 2, 1, 3}), 2);
+    EXPECT_EQ(findLengthOfLCIS({1, 2, 4, 3, 4}), 3);
+    EXPECT_EQ(findLengthOfLCIS({1, 2, 4, 3, 4, 5, 6}), 4);
+};
+
+TEST(lengthOfLIS, basic) {
+    EXPECT_EQ(lengthOfLIS({1}), 1);
+    EXPECT_EQ(lengthOfLIS({1, 2, 3}), 3);
+    EXPECT_EQ(lengthOfLIS({1, 2}), 2);
+
+    EXPECT_EQ(lengthOfLIS({2, 1}), 1);
+    EXPECT_EQ(lengthOfLIS({3, 2, 1}), 1);
+
+    EXPECT_EQ(lengthOfLIS({1, 7, 2, 4}), 3);
+    EXPECT_EQ(lengthOfLIS({4, 5, 2, 6, 7}), 4);
+};
 
 TEST(numSquares, basic) {
     EXPECT_EQ(numSquares(1), 1);

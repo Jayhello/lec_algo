@@ -24,3 +24,6 @@ int minSubArrayLen(int target, const vector<int>& nums);
 //https://leetcode.cn/problems/maximum-length-of-repeated-subarray/
 
 int findLength(const vector<int>& nums1, const vector<int>& nums2);
+
+//https://leetcode.cn/problems/increasing-triplet-subsequence/
+bool increasingTriplet(const vector<int>& nums);

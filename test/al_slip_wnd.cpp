@@ -8,11 +8,21 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "findLength*";
+    testing::FLAGS_gtest_filter = "increasingTriplet*";
     return RUN_ALL_TESTS();
 
     return 0;
 }
+
+TEST(increasingTriplet, basic) {
+    EXPECT_EQ(increasingTriplet({1}), false);
+    EXPECT_EQ(increasingTriplet({1, 2}), false);
+    EXPECT_EQ(increasingTriplet({1, 2, 2}), false);
+
+    EXPECT_EQ(increasingTriplet({1, 2, 3}), true);
+    EXPECT_EQ(increasingTriplet({1, 2, 2, 3, 4}), true);
+    EXPECT_EQ(increasingTriplet({1, 2, 2, 3, 3}), false);
+};
 
 TEST(findLength, basic) {
     EXPECT_EQ(findLength({1}, {1}), 1);

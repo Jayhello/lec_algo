@@ -302,3 +302,20 @@ int findLength(const vector<int>& nums1, const vector<int>& nums2){
 
     return ret;
 }
+
+// 下面这个是连续的
+bool increasingTriplet(const vector<int>& nums){
+    int len = int(nums.size()), i = 0, j = 1;
+    while (j < len){
+        if(nums[j] > nums[j - 1]){
+            if(j - i + 1 >= 3){
+                return true;
+            }
+        }else{
+            i = j;
+        }
+        ++j;
+    }
+
+    return false;
+}
