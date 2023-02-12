@@ -217,3 +217,126 @@ void heapSort(vector<int>& arr){
         adjustHeap(arr, 0, i);
     }
 }
+
+vector<int> spiralOrder2(vector<vector<int>>& matrix){
+    int row = int(matrix.size());
+    int col = int(matrix[0].size());
+    int cnt = (std::min(row, col) + 1) / 2;
+    vector<int> res;
+    for(int i = 0; i < cnt; ++i){
+        int r = i, c = i;
+        for(; c < col - i; ++c){
+            res.push_back(matrix[r][c]);
+        }
+
+        r = i + 1;
+        c = col - 1 - i;
+        for(; r < row - 1 - i; ++r){
+            res.push_back(matrix[r][c]);
+        }
+
+        r = row - 1 - i;
+        c = col - 1 - i;
+        for(; r > i and c >= i; --c){  // r > i 上下没有重合
+            res.push_back(matrix[r][c]);
+        }
+
+        c = i;
+        r = row - 1 - i - 1;
+        for(; (c < col - 1 - i) and r > i; --r){ // 左右没有重合
+            res.push_back(matrix[r][c]);
+        }
+    }
+
+    return res;
+}
+
+vector<int> spiralOrder(vector<vector<int>>& matrix){
+    int upper = 0, down = int(matrix.size());
+    int left = 0, right = int(matrix[0].size());
+
+    vector<int> res;
+    while(true){
+        for(int c = left; c < right;++c){
+            res.push_back(matrix[upper][c]);
+        }
+        if(++upper >= down)break;
+
+        for(int r = upper; r < down; ++r){
+            res.push_back(matrix[r][right - 1]);
+        }
+        if(--right <= left)break;
+
+        for(int c = right - 1; c >= left; --c){
+            res.push_back(matrix[down - 1][c]);
+        }
+        if(--down <= upper)break;
+
+        for(int r = down - 1; r >= upper; --r){
+            res.push_back(matrix[r][left]);
+        }
+        if(++left >= right)break;
+    }
+
+    return res;
+}
+
+vector<vector<int>> generateMatrix(int n){
+    int num = 1, threshold = n * n;
+    int upper = 0, down = n - 1;
+    int left = 0, right = n - 1;
+    vector<vector<int>> res(n, vector<int>(n, 0));
+    while(num <= threshold){
+        for(int c = left; c <= right; ++c){
+            res[upper][c] = num++;
+        }
+        if(++upper > down)break;
+
+        for(int r = upper; r <= down; ++r){
+            res[r][right] = num++;
+        }
+        if(--right < left)break;
+
+        for(int c = right; c >= left; --c){
+            res[down][c] = num++;
+        }
+        if(--down < upper)break;
+
+        for(int r = down; r >= upper; --r){
+            res[r][left] = num++;
+        }
+        if(++left > right)break;
+    }
+
+    return res;
+}
+
+static const char CH_FILL = '*';
+inline bool isFill(char c){return CH_FILL == c;}
+string convert6(string s, int row){
+    int len = int(s.size());
+    if(row <= 1 or len <= 2) return s;
+
+    int periodNum = (2 * row - 2);
+    int period = (len - 1) / periodNum + 1;
+    vector<vector<char>>  matrix(row, vector<char>(period * 2, CH_FILL));
+    int idx = 0;
+    for(int p =0; p < period and idx < len; ++p){
+        for(int i = 0; i < periodNum and idx < len; ++i){
+            int r = (i < row) ? i : (periodNum - i);
+            int c = 2 * p + (i < row ? 0 : 1);
+            matrix[r][c] = s[idx++];
+        }
+    }
+
+    string res;res.reserve(len);
+    for(int r = 0; r < row; ++r){
+        for(int c = 0; c < matrix[0].size(); ++c){
+            char ch = matrix[r][c];
+            if(isFill(ch)) continue;
+            res.push_back(ch);
+        }
+    }
+
+    return res;
+}

@@ -26,3 +26,5 @@ AddTestTarget(al_slip_wnd al_slip_wnd.cpp)
 
 AddTestTarget(al_dp_test al_dp_test.cpp)
 
+AddTestTarget(al_bt_test al_bt_test.cpp)
+

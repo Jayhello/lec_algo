@@ -4,6 +4,7 @@
 
 #include <numeric>
 #include <algorithm>
+#include <map>
 #include "al_dp.h"
 
 int maxSubArray(const vector<int>& nums){
@@ -96,7 +97,7 @@ int maxProfit122(const vector<int>& prices){
     return ret;
 }
 
-int coinChange1(const vector<int>& coins, int amount){
+int coinChange2(const vector<int>& coins, int amount){
     if(amount < 0) return -1;
     if(amount == 0) return 0;
 
@@ -112,7 +113,7 @@ int coinChange1(const vector<int>& coins, int amount){
     return ret == amount + 1 ? -1 : ret;
 }
 
-int coinChange(const vector<int>& coins, int amount){
+int coinChange1(const vector<int>& coins, int amount){
     vector<int> dp(amount + 1, amount + 1);
     dp[0] = 0;
     for(int i = 1; i <= amount; ++i){
@@ -123,6 +124,28 @@ int coinChange(const vector<int>& coins, int amount){
     }
 
     return dp[amount] == amount + 1 ? -1 : dp[amount];
+}
+
+int coinChange(const vector<int>& coins, int amount){
+    if(0 == amount) return 0;
+
+    int len = int(coins.size());
+    vector<vector<int>> dp(len + 1, vector<int>(amount + 1, 0));
+    for(int i = 1; i <= len; ++i){
+        for(int m = 1; m <= amount; ++m){
+            if(coins[i - 1] > m){
+                dp[i][m] = dp[i - 1][m];
+            }else{
+                if(0 == dp[i - 1][m]){
+                    dp[i][m] = dp[i][m - coins[i - 1]] + 1;
+                }else{
+                    dp[i][m] = std::min(dp[i - 1][m], dp[i][m - coins[i - 1]] + 1);
+                }
+            }
+        }
+    }
+
+    return 0 == dp[len][amount] ? -1 : dp[len][amount];
 }
 
 int change518_err(int amount, const vector<int>& coins){
@@ -160,7 +183,7 @@ int change518_v2(int amount, const vector<int>& coins){
     return dp[coins.size()][amount];
 }
 
-int change518(int amount, const vector<int>& coins){
+int change518_v3(int amount, const vector<int>& coins){
     if(amount <= 0) return 1;
 
     vector<int> dp(amount + 1, 0);
@@ -175,6 +198,28 @@ int change518(int amount, const vector<int>& coins){
     }
 
     return dp[amount];
+}
+
+int change518(int amount, const vector<int>& coins){
+    if(amount <= 0) return 0;
+
+    int len = int(coins.size());
+    vector<vector<int>> dp(len + 1, vector<int>(amount + 1, 0));
+    for(int i = 1; i <= len; ++i){
+        dp[i][0] = 1;
+    }
+
+    for(int i = 1; i <= len; ++i){
+        for(int m = 1; m <= amount; ++m){
+            if(coins[i - 1] > m){
+                dp[i][m] = dp[i - 1][m];
+            }else{
+                dp[i][m] = dp[i - 1][m] + dp[i][m - coins[i - 1]];
+            }
+        }
+    }
+
+    return dp[len][amount];
 }
 
 int climbStairs(int n){
@@ -214,6 +259,23 @@ int knapsack01(int W, const vector<int>& wt, const vector<int>& val){
     }
 
     return dp[wt.size()][W];
+}
+
+
+
+int knapsackAll(int W, const vector<int>& wt, const vector<int>& val){
+    int n = int(wt.size());
+    vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
+    for(int i = 1; i <= n; ++i){
+        for(int w = 1; w <= W; ++w){
+            if(wt[i - 1] > w){
+                dp[i][w] = dp[i - 1][w];
+            }else{
+                dp[i][w] = std::max(dp[i - 1][w], dp[i][w - wt[i - 1]] + val[i - 1]);
+            }
+        }
+    }
+    return dp[n][W];
 }
 
 bool canPartition416(const vector<int>& nums){
@@ -442,7 +504,7 @@ int minDistance72(string word1, string word2){
     return dp[len1][len2];
 }
 
-bool wordBreak(string s, const vector<string>& wordDict){
+bool wordBreak1(string s, const vector<string>& wordDict){
     int len = int(s.size());
     vector<bool> dp(len + 1, false);
     dp[0] = true;
@@ -602,7 +664,7 @@ int cuttingMaxProfit(const vector<int>& prices, int n){
 
 }
 
-int combinationSum4(const vector<int>& nums, int target){
+int combinationSum4_v2(const vector<int>& nums, int target){
     vector<int> dp(target + 1, 0);
     dp[0] = 1;
     for(int i = 1; i <= target; ++i){
@@ -614,3 +676,98 @@ int combinationSum4(const vector<int>& nums, int target){
 
     return dp[target];
 }
+
+int combinationSum4(const vector<int>& nums, int target){
+    int len = int(nums.size());
+    vector<int> dp(target + 1, 0);
+    dp[0] = 1;
+
+    for(int m = 1; m <= target; ++m){
+        for(auto n : nums){
+            if(n > m) continue;
+            dp[m] += dp[m - n];
+        }
+    }
+
+    return dp[len];
+}
+
+bool canReach(string s, int minJump, int maxJump){
+    int len = int(s.size());
+    vector<bool> dp(len, false);
+    dp[0] = true;
+
+    for(int i = 1; i < len; ++i){
+        if('0' != s[i]) continue;
+
+        int b = (i - maxJump >= 0 ? i - maxJump : 0);
+        int e = (i - minJump);
+        while(b <= e){
+            if(dp[e--]){
+                dp[i] = true;
+                break;
+            }
+        }
+    }
+
+    return dp[len - 1];
+}
+
+bool canJump(vector<int>& nums){
+    int len = int(nums.size());
+    if(0 == nums[0]){
+        return 1 == len ? true : false;
+    }
+    vector<int> dp(nums);
+    int idx = 1;
+    for(; idx < len; ++idx){
+        dp[idx] = std::max(dp[idx], dp[idx - 1] - 1);
+        if(0 == dp[idx])break;
+    }
+
+    return idx >= (len - 1);
+}
+
+
+int jump45(vector<int>& nums){
+    int len = int(nums.size());
+    vector<int> dp(len, len + 1);
+    dp[0] = 0;
+    for(int j = 1; j < len; ++j){
+        for(int i = j - 1; i >= 0; --i){
+            if(nums[i] >= j - i){
+                dp[j] = std::min(dp[j], dp[i] + 1);
+            }
+        }
+    }
+    return dp[len - 1];
+}
+
+int deleteAndEarn(vector<int>& nums){
+    std::map<int, int> mNumCnt;
+    for(auto n : nums) mNumCnt[n] += n;
+
+    int len = mNumCnt.size();
+    vector<int> dp;
+    for(const auto& kv : mNumCnt)dp.push_back(kv.second);
+
+    int i = 1;
+    auto it = ++mNumCnt.begin();
+    while(it != mNumCnt.end()){
+        auto prev = std::prev(it);
+        if(prev->first + 1 != it->first){
+            dp[i] += dp[i - 1];
+        }else{
+            if(i >= 2){
+                dp[i] = std::max(dp[i - 1], dp[i - 2] + dp[i]);
+            }else{
+                dp[i] = std::max(dp[i], dp[i - 1]);
+            }
+        }
+        ++i;
+        ++it;
+    }
+
+    return dp[len - 1];
+}
+

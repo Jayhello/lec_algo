@@ -26,3 +26,10 @@ string compressString(string str);
 int compress(vector<char>& chars);
 
 void heapSort(vector<int>& arr);
+
+//https://leetcode.cn/problems/spiral-matrix/
+vector<int> spiralOrder(vector<vector<int>>& matrix);
+
+vector<vector<int>> generateMatrix(int n);
+
+string convert6(string s, int row);

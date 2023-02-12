@@ -8,10 +8,72 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "sort*";
+    testing::FLAGS_gtest_filter = "convert6*";
     return RUN_ALL_TESTS();
 
     return 0;
+}
+
+TEST(convert6, basic){
+    EXPECT_EQ(convert6("1", 1), "1");
+    EXPECT_EQ(convert6("12", 1), "12");
+    EXPECT_EQ(convert6("12", 2), "12");
+    EXPECT_EQ(convert6("123", 2), "132");
+
+    EXPECT_EQ(convert6("1234", 3), "1243");
+    EXPECT_EQ(convert6("123456", 2), "135246");
+    EXPECT_EQ(convert6("123456", 3), "152463");
+}
+
+TEST(generateMatrix, basic){
+    vector<vector<int>> matrix;
+    {
+        matrix = {{1}};
+        EXPECT_EQ(generateMatrix(1), matrix);
+    }
+
+    {
+        matrix = {{1, 2}, {4, 3}};
+        EXPECT_EQ(generateMatrix(2), matrix);
+    }
+
+    {
+        matrix = {{1, 2, 3}, {8, 9, 4}, {7, 6, 5}};
+        EXPECT_EQ(generateMatrix(3), matrix);
+    }
+}
+
+TEST(spiralOrder, basic){
+    vector<vector<int>> matrix;
+    vector<int> nums;
+
+    {
+        nums = {0, 1, 2};
+        vector<vector<int>> tmp = {{0, 1, 2}};
+        EXPECT_EQ(spiralOrder(tmp), nums);
+    }
+
+    {
+        nums = {0, 1, 2, 5, 4, 3};
+        vector<vector<int>> tmp = {{0, 1, 2}, {3, 4, 5}};
+        EXPECT_EQ(spiralOrder(tmp), nums);
+    }
+    {
+        nums = {0, 1, 2, 5, 8, 7, 6, 3, 4};
+        vector<vector<int>> tmp = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}};
+        EXPECT_EQ(spiralOrder(tmp), nums);
+    }
+    {
+        nums = {1, 2, 4, 6, 5, 3};
+        vector<vector<int>> tmp = {{1, 2}, {3, 4}, {5, 6}};
+        EXPECT_EQ(spiralOrder(tmp), nums);
+    }
+
+    {
+        nums = {1, 2, 3};
+        vector<vector<int>> tmp = {{1}, {2}, {3}};
+        EXPECT_EQ(spiralOrder(tmp), nums);
+    }
 }
 
 TEST(sort, basic){

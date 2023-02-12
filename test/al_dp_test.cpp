@@ -9,7 +9,7 @@
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
 //    testing::FLAGS_gtest_filter = "findLength*";
-    testing::FLAGS_gtest_filter = "maxProduct*";
+    testing::FLAGS_gtest_filter = "maxSubArray*";
     return RUN_ALL_TESTS();
 }
 

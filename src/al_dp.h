@@ -34,6 +34,8 @@ int climbStairs(int n);
 
 int knapsack01(int W, const vector<int>& wt, const vector<int>& val);
 
+int knapsackcoinChangeAll(int W, const vector<int>& wt, const vector<int>& val);
+
 //https://leetcode.cn/problems/partition-equal-subset-sum/
 bool canPartition416(const vector<int>& nums);
 
@@ -95,4 +97,15 @@ int cuttingMaxProfit(const vector<int>& prices, int n);
 
 //https://leetcode.cn/problems/combination-sum-iv/
 int combinationSum4(const vector<int>& nums, int target);
+
+//https://leetcode.cn/problems/jump-game/
+bool canJump(vector<int>& nums);
+
+//https://leetcode.cn/problems/jump-game-ii/description/
+int jump45(vector<int>& nums);
+
+bool canReach(string s, int minJump, int maxJump);
+
+//https://leetcode.cn/problems/delete-and-earn/
+int deleteAndEarn(vector<int>& nums);
 
