@@ -28,3 +28,5 @@ AddTestTarget(al_dp_test al_dp_test.cpp)
 
 AddTestTarget(al_bt_test al_bt_test.cpp)
 
+AddTestTarget(al_bfs_test al_bfs_test.cpp)
+
