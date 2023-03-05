@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <numeric>
+#include <climits>
 
 void permute46Helper(const vector<int>& vNums, vector<int>& vTrack, vector<vector<int>>& vRes){
     if(vTrack.size() == vNums.size()){
@@ -688,4 +689,46 @@ bool wordBreak(string s, const vector<string>& wordDict){
     bool found = false;
     helper139(s, 0, wordDict, found);
     return found;
+}
+
+bool canReach(const string& s1, const string& s2){
+    int count = 0;
+    int len = s1.size();
+    for(int i = 0; i < len and count < 2; ++i){
+        if(s1[i] != s2[i]){
+            ++count;
+        }
+    }
+    return count == 1;
+}
+
+void helper127(const string& endWord, const vector<string>& wordList,
+               vector<string>& vPath, vector<bool>& visited, int& minLen){
+    if(vPath.back() == endWord){
+        minLen = std::min(int(vPath.size()), minLen);
+        return;
+    }
+
+    for(int i = 0; i < wordList.size(); ++i){
+        if(visited[i]) continue;
+        if(not canReach(vPath.back(), wordList[i]))continue;
+
+        vPath.push_back(wordList[i]);
+        visited[i] = true;
+        helper127(endWord, wordList, vPath, visited, minLen);
+        vPath.pop_back();
+        visited[i] = false;
+    }
+}
+
+int ladderLength(string beginWord, string endWord, vector<string>& wordList){
+    auto it = std::find(wordList.begin(), wordList.end(), endWord);
+    if(it == wordList.end())return 0;
+
+    vector<bool> visited(wordList.size(), false);
+    vector<string>  vPath = {beginWord};
+    int minLen = INT_MAX;
+    helper127(endWord, wordList, vPath, visited, minLen);
+
+    return INT_MAX == minLen ? 0 : minLen;
 }

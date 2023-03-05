@@ -40,7 +40,7 @@ vector<vector<int>> levelOrder_v2(TreeNode* root){
         int len = int(que.size());
         vector<int> vec;
         vec.reserve(len);
-        for(int i = 0; i < len: ++i){
+        for(int i = 0; i < len; ++i){
             auto p = que.front();
             que.pop();
             vec.push_back(p->val);

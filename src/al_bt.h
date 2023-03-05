@@ -80,3 +80,6 @@ bool canPartition(vector<int>& nums);
 
 //https://leetcode.cn/problems/word-break/
 bool wordBreak(string s, const vector<string>& wordDict);
+
+//https://leetcode.cn/problems/word-ladder/description/
+int ladderLength(string beginWord, string endWord, vector<string>& wordList);
