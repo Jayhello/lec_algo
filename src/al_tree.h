@@ -2,6 +2,7 @@
 // Created by wenwen on 2023/2/13.
 //
 #pragma once
+
 #include "al_comm.h"
 
 struct TreeNode{
@@ -44,3 +45,15 @@ public:
 //https://leetcode.cn/problems/populating-next-right-pointers-in-each-node/description/
 // todo 常量的解法 https://leetcode.cn/problems/populating-next-right-pointers-in-each-node-ii/solutions/429992/bfsjie-jue-zui-hao-de-ji-bai-liao-100de-yong-hu-by/?orderBy=most_votes
 Node* connect(Node* root);
+
+string serialize(TreeNode* root);
+
+TreeNode* deserialize(string data);
+
+namespace v2{
+
+string serialize(TreeNode* root);
+
+TreeNode* deserialize(string data);
+
+} // v2

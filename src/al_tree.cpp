@@ -150,3 +150,119 @@ bool isValidBST(TreeNode* root){
     return invalid;
 }
 
+string serialize(TreeNode* root) {
+    if(nullptr == root){
+        return "x";
+    }
+
+    string sRoot = std::to_string(root->val);
+    string sLeft = serialize(root->left);
+    string sRight = serialize(root->right);
+    return sRoot + " " + sLeft + " " + sRight;
+}
+
+void split(const string& str, char ch, vector<string>& vec){
+    string tmp;
+    for(auto c : str){
+        if(c != ch){
+            tmp.push_back(c);
+        }else{
+            vec.push_back(tmp);
+            tmp.clear();
+        }
+    }
+    if(not tmp.empty())vec.push_back(tmp);
+}
+
+TreeNode* buildTree(const vector<string>& vec, int& idx){
+    if("x" == vec[idx]){
+        return nullptr;
+    }
+
+    auto root = new TreeNode(std::stoi(vec[idx]));
+    root->left = buildTree(vec, ++idx);
+    root->right = buildTree(vec, ++idx);
+    return root;
+}
+// Decodes your encoded data to tree.
+TreeNode* deserialize(string data) {
+    if(data.empty() or data == "x") return nullptr;
+    vector<string> vec;
+    split(data, ' ', vec);
+
+    int idx = 0;
+    return buildTree(vec, idx);
+}
+
+namespace v2{
+
+string serialize(TreeNode* root) {
+    if(nullptr == root){
+        return "x";
+    }
+
+    string res;
+    std::queue<TreeNode*> que;
+    que.push(root);
+    while(not que.empty()){
+        auto tmp = que.front();
+        que.pop();
+
+        res += (nullptr == tmp ? "x" : std::to_string(tmp->val));
+        res += ' ';
+        if(nullptr == tmp){
+            continue;
+        }
+
+        que.push(tmp->left);
+        que.push(tmp->right);
+    }
+
+    res.erase(res.end() - 1);
+    return res;
+}
+
+void split(const string& str, char ch, vector<string>& vec){
+    string tmp;
+    for(auto c : str){
+        if(c != ch){
+            tmp.push_back(c);
+        }else{
+            vec.push_back(tmp);
+            tmp.clear();
+        }
+    }
+    if(not tmp.empty())vec.push_back(tmp);
+}
+
+// Decodes your encoded data to tree.
+TreeNode* deserialize(string data) {
+    if(data.empty() or data == "x") return nullptr;
+
+    vector<string> vec;
+    split(data, ' ', vec);
+
+    TreeNode* root = new TreeNode(std::stoi(vec[0]));
+    std::queue<TreeNode*> que;
+    que.push(root);
+    int i = 1;
+
+    while(not que.empty()){
+        auto tmp = que.front();
+        que.pop();
+        if(vec[i] != "x"){
+            tmp->left = new TreeNode(std::stoi(vec[i]));
+            que.push(tmp->left);
+        }
+        ++i;
+
+        if(vec[i] != "x"){
+            tmp->right = new TreeNode(std::stoi(vec[i]));
+            que.push(tmp->right);
+        }
+        ++i;
+    }
+    return root;
+}
+
+} // v2

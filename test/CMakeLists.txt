@@ -30,3 +30,5 @@ AddTestTarget(al_bt_test al_bt_test.cpp)
 
 AddTestTarget(al_bfs_test al_bfs_test.cpp)
 
+AddTestTarget(al_tree_test al_tree_test.cpp)
+
