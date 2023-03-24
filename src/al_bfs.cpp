@@ -284,3 +284,35 @@ void solve(vector<vector<char>>& board){
         }
     }
 }
+
+bool canFinish(int n, vector<vector<int>>& prerequisites){
+    vector<int> vec(n , 0);
+    for(const auto& req : prerequisites){
+        ++vec[req[0]];
+    }
+
+    std::queue<int> que;
+    for(int i = 0; i < n; ++i){
+        if(0 == vec[i])que.push(i);
+    }
+
+    while(not que.empty()){
+        int idx = que.front();
+        que.pop();
+
+        for(const auto& req : prerequisites){
+            if(req[1] == idx){
+                --vec[req[0]];
+                if(0 == vec[req[0]]){
+                    que.push(req[0]);
+                }
+            }
+        }
+    }
+
+    auto it = std::find_if(vec.begin(), vec.end(), [](int a){
+        return a > 0;
+    });
+
+    return it == vec.end();
+}

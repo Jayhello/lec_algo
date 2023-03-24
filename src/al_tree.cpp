@@ -2,7 +2,118 @@
 // Created by wenwen on 2023/2/13.
 //
 
+#include <climits>
 #include "al_tree.h"
+
+void preOrder(TreeNode* root){
+    if(nullptr == root)return;
+//    cout << root->val << endl;
+
+    preOrder(root->left);
+    preOrder(root->right);
+}
+
+void midOrder(TreeNode* root){
+    if(nullptr == root) return;
+    midOrder(root->left);
+//    cout << root->val;
+    midOrder(root->right);
+}
+
+void postOrder(TreeNode* root){
+    if(nullptr == root) return;
+    midOrder(root->left);
+    midOrder(root->right);
+//    cout << root->val;
+}
+
+
+void preOrder1(TreeNode* p){
+
+}
+
+vector<int> postOrder1(TreeNode* root){
+    if(nullptr == root)return {};
+
+    vector<int> res;
+    stack<TreeNode*> sta;
+    sta.push(root);
+    TreeNode* prev = nullptr;
+    while(not sta.empty()){
+        root = sta.top();
+        if((!root->left and !root->right) or
+            (prev and (root->left == prev or root->right == prev))){
+            res.push_back(root->val);
+            prev = root;
+            sta.pop();
+            continue;
+        }
+
+        if(root->right) sta.push(root->right);
+        if(root->left) sta.push(root->left);
+    }
+    return res;
+}
+
+bool isChild(MultiNode* root, MultiNode* p){
+    auto it = std::find(root->children.begin(), root->children.end(), p);
+    return it != root->children.end();
+}
+
+vector<int> postorder(MultiNode* root){
+    if(nullptr == root) return {};
+
+    vector<int> res;
+    MultiNode* prev = nullptr;
+    std::stack<MultiNode*> sta;
+    sta.push(root);
+    while(not sta.empty()){
+        auto tmp = sta.top();
+        if(tmp->children.empty() or (prev and isChild(tmp, prev))){
+            res.push_back(tmp->val);
+            sta.pop();
+            prev = tmp;
+            continue;
+        }
+
+        for(auto it = tmp->children.rbegin(); it != tmp->children.rend(); ++it){
+            sta.push(*it);
+        }
+    }
+    return res;
+}
+
+typedef std::pair<TreeNode*, int> ColumnContext;
+
+vector<vector<int>> verticalOrder(TreeNode* root){
+    if(!root) return {};
+
+    std::map<int, vector<int>> m_col_vec;
+    vector<vector<int>> vec_vec;
+
+    queue<ColumnContext> que;
+    que.push(std::make_pair(root, 0));
+
+    while(not que.empty()){
+        const auto& tmp = que.front();
+        que.pop();
+        m_col_vec[tmp.second].push_back(tmp.first->val);
+
+        if(tmp.first->left){ // 左节点索引  -1
+            que.push(std::make_pair(tmp.first->left, tmp.second - 1));
+        }
+
+        if(tmp.first->right){  // 右节点索引  +1
+            que.push(std::make_pair(tmp.first->right, tmp.second + 1));
+        }
+    }
+
+    for(auto& item : m_col_vec){
+        vec_vec.emplace_back(std::move(item.second));
+    }
+
+    return vec_vec;
+}
 
 vector<vector<int>> levelOrder(TreeNode* root){
     if(!root) return {};
@@ -192,6 +303,128 @@ TreeNode* deserialize(string data) {
 
     int idx = 0;
     return buildTree(vec, idx);
+}
+
+
+bool helper26(TreeNode* root1, TreeNode* root2){
+    if(!root2)return true;
+    if(!root1)return false;
+    if(root1->val != root2->val) return false;
+    return helper26(root1->left, root2->left) and
+           helper26(root1->right, root2->right);
+}
+bool isSubStructure(TreeNode* root1, TreeNode* root2) {
+    if(!root1 or !root2) return false;
+    return helper26(root1, root2) or
+           isSubStructure(root1->left, root2) or
+           isSubStructure(root1->right, root2);
+}
+
+int getTreeHeight(TreeNode* root){
+    if(!root) return 0;
+    return std::max(getTreeHeight(root->left), getTreeHeight(root->right)) + 1;
+}
+
+bool isBalanced(TreeNode* root){
+    if(!root) return true;
+    int l = getTreeHeight(root->left);
+    int r = getTreeHeight(root->right);
+    if(std::abs(l - r) > 1) return false;
+    return isBalanced(root->left) and isBalanced(root->right);
+}
+
+int maxDepth(TreeNode* root){
+    if(nullptr == root) return 0;
+    int left = maxDepth(root->left);
+    int right = maxDepth(root->right);
+    return std::max(left, right) + 1;
+}
+
+int minDepth(TreeNode* root){
+    if(nullptr == root) 	return 0;
+    std::queue<TreeNode*> que;
+    que.push(root);
+    int height = 1;
+    while(not que.empty()){
+        int len = que.size();
+
+        for(int i = 0; i < len; ++i){
+            root = que.front();
+            que.pop();
+            if(!root->left and !root->right)return height;
+            if(root->left) que.push(root->left);
+            if(root->right) que.push(root->right);
+        }
+        ++height;
+    }
+
+    return height;
+}
+
+void helper111(TreeNode* root, int cur, int& res){
+    if(!root)return;
+    if(!root->left and !root->right){
+        res = std::min(res, cur);
+        return;
+    }
+    helper111(root->left, cur + 1, res);
+    helper111(root->right, cur + 1, res);
+}
+
+int minDepth2(TreeNode* root){
+    if(!root) return 0;
+    int res = INT_MAX;
+    helper111(root, 1, res);
+    return res;
+}
+
+TreeNode* invertTree(TreeNode* root){
+    if(!root) return root;
+    invertTree(root->left);
+    invertTree(root->right);
+    std::swap(root->left, root->right);
+    return root;
+}
+
+bool helper101(TreeNode* left, TreeNode* right){
+    if(!left and !right) return true;
+    if(!left or !right or left->val != right->val) return false;
+    return helper101(left->left, right->right) and
+           helper101(left->right, right->left);
+}
+
+bool isSymmetric(TreeNode* root){
+    if(!root)return true;
+    return helper101(root->left, root->right);
+}
+
+bool isSymmetric2(TreeNode* root){
+    if(!root) return true;
+    std::deque<TreeNode*> que;
+    que.push_back(root);
+
+    while(not que.empty()){
+        int len = que.size();
+        for(int i = 0; i < len; ++i){
+            auto tmp = que.front();
+            que.pop_front();
+            if(!tmp)continue;
+
+            que.push_back(tmp->left);
+            que.push_back(tmp->right);
+        }
+
+        std::deque<TreeNode*> tmpQue(que.rbegin(), que.rend());
+        auto it = que.begin();
+        auto it2 = tmpQue.begin();
+        for(;it != que.end(); ++it, ++it2){
+            if(!(*it) and !(*it2))continue;
+            if(!(*it) or !(*it2))return false;
+            if((*it)->val != (*it2)->val)return false;
+        }
+    }
+
+    return true;
 }
 
 namespace v2{

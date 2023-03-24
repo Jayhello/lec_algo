@@ -15,6 +15,12 @@ struct TreeNode{
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+void preOrder(TreeNode* root);
+
+void midOrder(TreeNode* root);
+
+void postOrder(TreeNode* root);
+
 vector<vector<int>> levelOrder(TreeNode* root);
 
 vector<vector<int>> zigzagLevelOrder(TreeNode* root);
@@ -24,8 +30,23 @@ vector<int> rightSideView(TreeNode* root);
 
 bool isSameTree(TreeNode* p, TreeNode* q);
 
+//https://leetcode.cn/problems/balanced-binary-tree/description/
+bool isBalanced(TreeNode* root);
+
+//https://leetcode.cn/problems/maximum-depth-of-binary-tree/description/
+int maxDepth(TreeNode* root);
+
+//https://leetcode.cn/problems/minimum-depth-of-binary-tree/description/
+int minDepth(TreeNode* root);
+
 //https://leetcode.cn/problems/validate-binary-search-tree/description/
 bool isValidBST(TreeNode* root);
+
+//https://leetcode.cn/problems/invert-binary-tree/
+TreeNode* invertTree(TreeNode* root);
+
+//https://leetcode.cn/problems/symmetric-tree/
+bool isSymmetric(TreeNode* root);
 
 class Node {
 public:
@@ -49,6 +70,27 @@ Node* connect(Node* root);
 string serialize(TreeNode* root);
 
 TreeNode* deserialize(string data);
+
+struct MultiNode{
+    int val;
+    vector<MultiNode*> children;
+    MultiNode(int _val) {
+        val = _val;
+    }
+    MultiNode(int _val, vector<MultiNode*> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+
+//https://leetcode.cn/problems/n-ary-tree-postorder-traversal/description/
+vector<int> postorder(MultiNode* root);
+
+vector<vector<int>> verticalOrder(TreeNode* root);
+
+//https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/
+bool isSubStructure(TreeNode* root1, TreeNode* root2);
+
 
 namespace v2{
 

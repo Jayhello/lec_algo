@@ -28,3 +28,6 @@ int openLock(vector<string>& deadends, string target);
 
 //https://leetcode.cn/problems/surrounded-regions/
 void solve(vector<vector<char>>& board);
+
+//https://leetcode.cn/problems/course-schedule/
+bool canFinish(int n, vector<vector<int>>& prerequisites);
