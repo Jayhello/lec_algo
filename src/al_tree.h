@@ -48,6 +48,9 @@ TreeNode* invertTree(TreeNode* root);
 //https://leetcode.cn/problems/symmetric-tree/
 bool isSymmetric(TreeNode* root);
 
+//https://leetcode.cn/problems/merge-two-binary-trees/description/
+TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2);
+
 class Node {
 public:
     int val;
@@ -91,6 +94,10 @@ vector<vector<int>> verticalOrder(TreeNode* root);
 //https://leetcode.cn/problems/shu-de-zi-jie-gou-lcof/
 bool isSubStructure(TreeNode* root1, TreeNode* root2);
 
+vector<TreeNode*> findDuplicateSubtrees(TreeNode* root);
+
+//https://leetcode.cn/problems/construct-string-from-binary-tree/description/
+string tree2str(TreeNode* root);
 
 namespace v2{
 

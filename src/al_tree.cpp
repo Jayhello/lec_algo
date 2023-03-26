@@ -427,6 +427,49 @@ bool isSymmetric2(TreeNode* root){
     return true;
 }
 
+TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2){
+    if(!root1) return root2;
+    if(!root2) return root1;
+
+    root1->val += root2->val;;
+    root1->left = mergeTrees(root1->left, root2->left);
+    root1->right = mergeTrees(root1->right, root2->right);
+    return root1;
+}
+
+string helper652(TreeNode* root, unordered_map<string, int>& mPathCount, vector<TreeNode*>& res){
+    if(!root) return "";
+    string str = std::to_string(root->val) + " " + helper652(root->left, mPathCount, res) + " " + helper652(root->right, mPathCount, res);
+    ++mPathCount[str];
+    if(2 == mPathCount[str]){
+        res.push_back(root);
+    }
+    return str;
+}
+
+vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+    vector<TreeNode*>res;
+    unordered_map<string, int> mPathCount;
+    helper652(root, mPathCount, res);
+    return res;
+}
+
+string tree2str(TreeNode* root){
+    if(!root) return "";
+
+    string str = to_string(root->val);
+    if(!root->left and !root->right){
+        return str;
+    }
+    else if(root->left and root->right){
+        return str + "(" + tree2str(root->left) + ")" + "(" + tree2str(root->right) + ")";
+    }else if(!root->right){
+        return str + "(" + tree2str(root->left) + ")";
+    }else{
+        return str + "()(" + tree2str(root->right) + ")";
+    }
+}
+
 namespace v2{
 
 string serialize(TreeNode* root) {
