@@ -470,6 +470,513 @@ string tree2str(TreeNode* root){
     }
 }
 
+bool isCousins(TreeNode* root, int x, int y){
+    if(!root)return false;
+
+    std::queue<TreeNode*> que;
+    que.push(root);
+    int ix = -1, iy = -1;
+    while(not que.empty()){
+        int len = que.size();
+        for(int i = 0; i < len; ++i){
+            root = que.front();
+            que.pop();
+            if(!root)continue;
+            if(root->val == x)ix = i;
+            if(root->val == y)iy = i;
+
+            que.push(root->left);
+            que.push(root->right);
+        }
+
+        if(-1 == ix and -1 == iy)continue;
+        if(-1 == ix or -1 == iy)return false;
+
+        return ix / 2 != iy / 2;
+    }
+
+    return false;
+}
+
+void helper993(TreeNode* root, TreeNode* parent, int depth, int x, int y, int& xDepth, int& yDepth,
+               TreeNode*& xParent, TreeNode*& yParent){
+    if(!root or (xDepth >=0 and yDepth >= 0))return;
+    if(root->val == x){
+        xParent = parent;
+        xDepth = depth;
+    }
+    if(root->val == y){
+        yParent = parent;
+        yDepth = depth;
+    }
+    helper993(root->left, root, depth + 1, x, y, xDepth, yDepth, xParent, yParent);
+    helper993(root->right, root, depth + 1, x, y, xDepth, yDepth, xParent, yParent);
+}
+
+bool isCousins2(TreeNode* root, int x, int y){
+    TreeNode* parent = nullptr, *xParent = nullptr, *yParent = nullptr;
+    int depth = 0, xDepth = -1, yDepth = -1;
+    helper993(root, parent, depth, x, y, xDepth, yDepth, xParent, yParent);
+
+    return xDepth == yDepth and xParent != yParent;
+}
+
+class CBTInserter {
+public:
+    CBTInserter(TreeNode* root):root_(root) {
+        init(root_);
+    }
+
+    int insert(int val) {
+        int depth = vLevel_.size();
+
+        int num = vLevel_[depth - 1].size();
+        int iMax = std::pow(2, depth - 1);
+        TreeNode* parent = nullptr;
+        bool isLeft = true;
+        if(num >= iMax){
+            parent = vLevel_[depth - 1][0];
+            parent->left = new TreeNode(val);
+            vLevel_.push_back({parent->left});
+            return parent->val;
+        }
+
+        parent = vLevel_[depth - 2][num / 2];
+        isLeft = not (num % 2);
+
+        if(isLeft){
+            parent->left = new TreeNode(val);
+            vLevel_[depth - 1].push_back(parent->left);
+        }else{
+            parent->right = new TreeNode(val);
+            vLevel_[depth - 1].push_back(parent->right);
+        }
+
+        return parent->val;
+    }
+
+    TreeNode* get_root() {
+        return root_;
+    }
+
+    void init(TreeNode* root){
+        if(!root)return;
+        vLevel_.push_back({root});
+
+        while(true){
+            auto& level = vLevel_.back();
+            int len = level.size();
+            vector<TreeNode*> tmpLevel;
+            for(int i = 0; i < len; ++i){
+                if(level[i]->left)tmpLevel.push_back(level[i]->left);
+                if(level[i]->right)tmpLevel.push_back(level[i]->right);
+                if(!level[i]->left or !level[i]->right) break;
+            }
+
+            if(tmpLevel.empty())return;
+            vLevel_.push_back(std::move(tmpLevel));
+        }
+    }
+
+    TreeNode*              	  root_;
+    vector<vector<TreeNode*>> vLevel_;
+};
+
+void helper112(TreeNode* root, int targetSum, int curSum, bool& found){
+    if(!root or found){
+        return;
+    }
+
+    curSum += root->val;
+    if(!root->left and !root->right and curSum == targetSum){
+        found = true;
+        return;
+    }
+
+    helper112(root->left, targetSum, curSum, found);
+    helper112(root->right, targetSum, curSum, found);
+}
+
+
+bool hasPathSum(TreeNode* root, int targetSum){
+    if(!root) return false;
+    bool found = false;
+    helper112(root, targetSum, 0, found);
+    return found;
+}
+
+void helper113(TreeNode* root, int targetSum, int curSum, vector<int>& path, vector<vector<int>>& res){
+    if(!root)return;
+
+    curSum += root->val;
+    path.push_back(root->val);
+    if(curSum == targetSum and !root->left and !root->right){
+        res.push_back(path);
+    }
+
+    helper113(root->left, targetSum, curSum, path, res);
+    helper113(root->right, targetSum, curSum, path, res);
+    path.pop_back();
+}
+
+vector<vector<int>> pathSum(TreeNode* root, int targetSum){
+    vector<vector<int>> res;
+    vector<int> path;
+    helper113(root, targetSum, 0, path, res);
+    return res;
+}
+
+int helper437(TreeNode* root, int targetSum, int curSum){
+    if(!root) return 0;
+    curSum += root->val;
+    int ret = (curSum == targetSum ? 1 : 0);
+    return ret + helper437(root->left, targetSum, curSum)
+           + helper437(root->right, targetSum, curSum);
+}
+
+int pathSum437(TreeNode* root, int targetSum){
+    if(!root) return 0;
+    return helper437(root, targetSum, 0)
+           + pathSum437(root->left, targetSum)
+           + pathSum437(root->right, targetSum);
+}
+
+void helper129(TreeNode* root, int cur, int& sum){
+    if(!root)return;
+    cur = 10 * cur + root->val;
+    if(!root->left and !root->right){
+        sum += cur;
+        return;
+    }
+
+    helper129(root->left, cur, sum);
+    helper129(root->right, cur, sum);
+}
+
+int sumNumbers(TreeNode* root){
+    int sum = 0;
+    helper129(root, 0, sum);
+    return sum;
+}
+
+void helper988(TreeNode* root, string& path, string& res){
+    if(!root)return;
+    path.push_back(root->val + 'a');
+    if(!root->left and !root->right){
+        string tmp(path.rbegin(), path.rend());
+        if(res.empty()){
+            res = tmp;
+        }else{
+            if(res > tmp){
+                res = tmp;
+            }
+        }
+    }
+
+    helper988(root->left, path, res);
+    helper988(root->right, path, res);
+    path.pop_back();
+}
+
+string smallestFromLeaf(TreeNode* root){
+    string path, res;
+    helper988(root, path, res);
+    return res;
+}
+
+namespace r543{
+
+int helper543(TreeNode* root){
+    if(!root) return 0;
+    return 1 + std::max(helper543(root->left), helper543(root->right));
+}
+int diameterOfBinaryTree(TreeNode* root){
+    return helper543(root->left) + helper543(root->right);
+}
+
+int helper5431(TreeNode* root){
+    if(!root) return 0;
+    return 1 + std::max(helper543(root->left), helper543(root->right));
+}
+int diameterOfBinaryTree1(TreeNode* root){
+    if(!root)return 0;
+    int rootDia = helper543(root->left) + helper543(root->right);
+    int leftDia = diameterOfBinaryTree1(root->left);
+    int rightDia = diameterOfBinaryTree1(root->right);
+    return std::max(rootDia, std::max(leftDia, rightDia));
+}
+
+} // r543
+
+
+class R543{
+public:
+int max_ = 0;
+int helper543(TreeNode* root){
+    if(!root) return 0;
+    int lh = helper543(root->left);
+    int rh = helper543(root->right);
+    max_ = std::max(max_, lh + rh);
+
+    return 1 + std::max(lh, rh);
+}
+
+int diameterOfBinaryTree(TreeNode* root){
+    if(!root)return 0;
+
+    int left = helper543(root->left);
+    int right = helper543(root->right);
+    max_ = std::max(max_, left + right);
+    return max_;
+}
+};
+
+class Solution124 {
+public:
+    int res_ = INT_MIN;
+    int helper124(TreeNode* root, int sum){
+        if(!root)return 0;
+        if(sum < 0){
+            res_ = std::max(res_, sum);
+            return sum;
+        }
+
+        sum += root->val;
+        int left = helper124(root->left, sum);
+        int right = helper124(root->right, sum);
+
+        res_ = std::max(res_, left + right);
+        return left + right;
+    }
+    int maxPathSum(TreeNode* root) {
+        if(!root) return res_;
+        helper124(root, 0);
+        maxPathSum(root->left);
+        maxPathSum(root->right);
+        return res_;
+    }
+};
+
+void helper257(TreeNode* root, string path, vector<string>& res){
+    if(!root)return;
+
+    path += std::to_string(root->val);
+    if(root->left or root->right){
+        path += "->";
+    }
+
+    if(!root->left and !root->right){
+        res.push_back(path);
+    }
+
+    helper257(root->left, path, res);
+    helper257(root->right, path, res);
+}
+
+vector<string> binaryTreePaths(TreeNode* root){
+    vector<string> res;
+    helper257(root, "", res);
+    return res;
+}
+
+class Solution1026 {
+public:
+int res_ = 0;
+void helper1026(TreeNode* root, int val){
+    if(!root) return;
+    res_ = std::max(std::abs(root->val - val), res_);
+    helper1026(root->left, val);
+    helper1026(root->right, val);
+}
+int maxAncestorDiff(TreeNode* root) {
+    if(!root) return res_;
+    helper1026(root, root->val);
+    maxAncestorDiff(root->left);
+    maxAncestorDiff(root->right);
+    return res_;
+}
+
+void helper1026(TreeNode* root, int iMin, int iMax){
+    if(!root) return;
+    int tmp = std::max(std::abs(iMin - root->val), std::abs(iMax - root->val));
+    res_ = std::max(res_, tmp);
+    iMin = std::min(iMin, root->val);
+    iMax = std::max(iMax, root->val);
+    helper1026(root->left, iMin, iMax);
+    helper1026(root->right, iMin, iMax);
+}
+
+int maxAncestorDiff1(TreeNode* root){
+    if(!root) return res_;
+    helper1026(root, root->val, root->val);
+    return res_;
+}
+};
+
+bool helper235(TreeNode* root, TreeNode* p){
+    if(!root) return false;
+    if(root->val == p->val){
+        return true;
+    }else if(root->val > p->val){
+        return helper235(root->left, p);
+    }else{
+        return helper235(root->right, p);
+    }
+}
+
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q){
+    if(p->val == root->val)return p;
+    if(q->val == root->val)return q;
+
+    bool pLeft = helper235(root->left, p);
+    bool qRight = helper235(root->right, q);
+    if(pLeft and qRight){
+        return root;
+    }
+
+    bool pRight = helper235(root->right, p);
+    bool qLeft = helper235(root->left, q);
+    if(pRight and qLeft){
+        return root;
+    }
+
+    if(pLeft and qLeft){
+        return lowestCommonAncestor(root->left, p, q);
+    }
+
+    if(pRight and qRight){
+        return lowestCommonAncestor(root->right, p, q);
+    }
+}
+
+bool helper236(TreeNode* root, TreeNode* p){
+    if(!root) return false;
+    if(root->val == p->val){
+        return true;
+    }
+
+    return helper236(root->left, p) or helper236(root->right, p);
+}
+
+TreeNode* lowestCommonAncestor1(TreeNode* root, TreeNode* p, TreeNode* q){
+    if(p->val == root->val)return p;
+    if(q->val == root->val)return q;
+
+    bool pLeft = helper236(root->left, p);
+    bool qRight = helper236(root->right, q);
+    if(pLeft and qRight){
+        return root;
+    }
+
+    bool pRight = helper236(root->right, p);
+    bool qLeft = helper236(root->left, q);
+    if(pRight and qLeft){
+        return root;
+    }
+
+    if(pLeft and qLeft){
+        return lowestCommonAncestor(root->left, p, q);
+    }
+
+    if(pRight and qRight){
+        return lowestCommonAncestor(root->right, p, q);
+    }
+    return nullptr;
+}
+
+void helper236_2(TreeNode* root, TreeNode* p, bool& found, vector<TreeNode*>& path){
+    if(!root) return;
+
+    path.push_back(root);
+    if(root == p){
+        found = true;
+        return;
+    }
+
+    if(not found) helper236_2(root->left, p, found, path);
+    if(not found) helper236_2(root->right, p, found, path);
+    if(not found) path.pop_back();
+}
+
+TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q){
+    if(!root or !p or !q) return nullptr;
+    bool foundP = false, foundQ = false;
+    vector<TreeNode*> pathP, pathQ;
+    helper236_2(root, p, foundP, pathP);
+    if(not foundP) return nullptr;
+    helper236_2(root, q, foundQ, pathQ);
+    if(not foundQ) return nullptr;
+
+    int i = 0;
+    int len = std::min(pathP.size(), pathQ.size());
+    for(; i < len; ++i){
+        if(pathP[i] != pathQ[i]) break;
+    }
+
+    return pathP[i - 1];
+}
+
+void helper230(TreeNode* root, int& k, TreeNode*& p){
+    if(!root or k <= 0)return;
+
+    helper230(root->left, k, p);
+    if(k <= 0) return;
+
+    if(--k == 0){
+        p = root;
+        return;
+    }
+
+    helper230(root->right, k, p);
+}
+
+int kthSmallest(TreeNode* root, int k){
+    TreeNode* p = nullptr;
+    helper230(root, k, p);
+    return p->val;
+}
+
+void helper783(TreeNode* root, TreeNode*& prev, int& iMin){
+    if(!root)return;
+
+    helper783(root->left, prev, iMin);
+    if(!prev){
+        prev = root;
+    }else{
+        iMin = std::min(iMin, std::abs(root->val - prev->val));
+        prev = root;
+    }
+    helper783(root->right, prev, iMin);
+}
+
+int minDiffInBST(TreeNode* root){
+    int iMin = INT_MAX;
+    TreeNode* prev = nullptr;
+    helper783(root, prev, iMin);
+    return iMin;
+}
+
+void helper98(TreeNode* root, TreeNode*& prev, bool& bValid){
+    if(!root or not bValid) return;
+    helper98(root->left, prev, bValid);
+    if(prev){
+        if(prev->val > root->val){
+            bValid = false;
+            return;
+        }
+    }
+
+    prev = root;
+    helper98(root->right, prev, bValid);
+}
+
+bool isValidBST1(TreeNode* root){
+    TreeNode* prev = nullptr;
+    bool bValid = true;
+    helper98(root, prev, bValid);
+    return bValid;
+}
+
 namespace v2{
 
 string serialize(TreeNode* root) {

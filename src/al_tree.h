@@ -99,6 +99,48 @@ vector<TreeNode*> findDuplicateSubtrees(TreeNode* root);
 //https://leetcode.cn/problems/construct-string-from-binary-tree/description/
 string tree2str(TreeNode* root);
 
+//https://leetcode.cn/problems/cousins-in-binary-tree/description/
+bool isCousins(TreeNode* root, int x, int y);
+
+//https://leetcode.cn/problems/path-sum/
+bool hasPathSum(TreeNode* root, int targetSum);
+
+// https://leetcode.cn/problems/path-sum-ii/
+vector<vector<int>> pathSum(TreeNode* root, int targetSum);
+
+//https://leetcode.cn/problems/path-sum-iii/
+int pathSum437(TreeNode* root, int targetSum);
+
+//https://leetcode.cn/problems/sum-root-to-leaf-numbers/
+int sumNumbers(TreeNode* root);
+
+//https://leetcode.cn/problems/smallest-string-starting-from-leaf/description/
+string smallestFromLeaf(TreeNode* root);
+
+//https://leetcode.cn/problems/diameter-of-binary-tree/
+int diameterOfBinaryTree(TreeNode* root);
+
+//https://leetcode.cn/problems/binary-tree-paths
+vector<string> binaryTreePaths(TreeNode* root);
+
+//https://leetcode.cn/problems/maximum-difference-between-node-and-ancestor
+int maxAncestorDiff(TreeNode* root);
+
+//https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-search-tree/
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q);
+
+//https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree
+TreeNode* lowestCommonAncestor1(TreeNode* root, TreeNode* p, TreeNode* q);
+
+//https://leetcode.cn/problems/kth-smallest-element-in-a-bst/
+int kthSmallest(TreeNode* root, int k);
+
+//https://leetcode.cn/problems/minimum-distance-between-bst-nodes/
+int minDiffInBST(TreeNode* root);
+
+// https://leetcode.cn/problems/validate-binary-search-tree
+bool isValidBST1(TreeNode* root);
+
 namespace v2{
 
 string serialize(TreeNode* root);
