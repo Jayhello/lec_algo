@@ -977,6 +977,189 @@ bool isValidBST1(TreeNode* root){
     return bValid;
 }
 
+void helper99(TreeNode* root, vector<TreeNode*>& path){
+    if(!root) return;
+    helper99(root->left, path);
+    path.push_back(root);
+    helper99(root->right, path);
+}
+
+void recoverTree(TreeNode* root){
+    vector<TreeNode*> path;
+    helper99(root, path);
+
+    TreeNode* x = nullptr, *y = nullptr;
+    int len = path.size();
+    for(int i = 0; i < len - 1; ++i){
+        if(path[i]->val > path[i + 1]->val){
+            if(!x) x = path[i];
+            y = path[i + 1];
+        }
+    }
+
+    std::swap(x->val, y ->val);
+}
+
+
+void helper501(TreeNode* root, int& iMaxCnt, int& iCnt, TreeNode*& prev, vector<int>& res){
+    if(!root) return;
+    helper501(root->left, iMaxCnt, iCnt, prev, res);
+    if(prev){
+        if(root->val == prev->val){
+            ++iCnt;
+            if(iCnt > iMaxCnt)res.clear();
+        }else{
+            if(iCnt == iMaxCnt){
+                res.push_back(prev->val);
+            }else if(iCnt > iMaxCnt){
+                res.clear();
+                res.push_back(prev->val);
+                iMaxCnt = iCnt;
+            }
+            iCnt = 1;
+        }
+    }
+
+    prev = root;
+    helper501(root->right, iMaxCnt, iCnt, prev, res);
+}
+
+vector<int> findMode(TreeNode* root){
+    int iMaxCnt = 1, iCnt = 1;
+    vector<int> res;
+    TreeNode* prev = nullptr;
+    helper501(root, iMaxCnt, iCnt, prev, res);
+    if(iMaxCnt == iCnt){
+        res.push_back(prev->val);
+    }else if(iMaxCnt < iCnt){
+        res.clear();
+        res.push_back(prev->val);
+    }
+
+    return res;
+}
+
+void helper501(TreeNode* root, vector<TreeNode*>& path){
+    if(!root) return;
+    helper501(root->left, path);
+    path.push_back(root);
+    helper501(root->right, path);
+}
+
+vector<int> findMode1(TreeNode* root){
+    vector<TreeNode*> path;
+    helper501(root, path);
+
+    if(1 == path.size()) return {path[0]->val};
+
+    vector<int> res;
+    int iMaxCnt = 1, iCnt = 1;
+    int i = 1, len = path.size();
+    TreeNode* prev = path[0];
+    while(i < len){
+        while(i < len and prev->val == path[i]->val){
+            ++i;
+            ++iCnt;
+        }
+
+        if(iCnt > iMaxCnt){
+            res.clear();
+            res.push_back(prev->val);
+            iMaxCnt = iCnt;
+        }else if(iCnt == iMaxCnt){
+            res.push_back(prev->val);
+        }
+
+        if(i < len){
+            prev = path[i];
+            iCnt = 1;
+            ++i;
+        }
+    }
+
+    if(1 == iMaxCnt)res.push_back(path[len - 1]->val);
+
+    return res;
+}
+
+TreeNode* insertIntoBST(TreeNode* root, int val){
+    if(!root) return new TreeNode(val);
+
+    if(root->val > val){
+        root->left = insertIntoBST(root->left, val);
+    }else{
+        root->right = insertIntoBST(root->right, val);
+    }
+
+    return root;
+}
+
+bool helperO33(const vector<int>& nums, int left, int right){
+    if(right - left <= 2) return true;
+
+    int mid = left;
+    while(mid < right and nums[mid] < nums[right]){
+        ++mid;
+    }
+
+    for(int i = mid; i < right; ++i){
+        if(nums[i] < nums[right]) return false;
+    }
+
+    bool res = helperO33(nums, left, mid - 1);
+    if(not res) return false;
+
+    res = helperO33(nums, mid, right - 1);
+    if(not res) return false;
+
+    return true;
+}
+
+bool verifyPostorder(vector<int>& postorder){
+    int len = postorder.size();
+    return helperO33(postorder, 0, len - 1);
+}
+
+TreeNode* helper105(const vector<int>& preorder, int preBeg, int preEnd,
+                    const vector<int>& inorder, int inBeg, int inEnd){
+    if(preEnd < preBeg or inBeg > inEnd or preEnd >= preorder.size()) return nullptr;
+    TreeNode* root = new TreeNode(preorder[preBeg]);
+    int cnt = 0;
+    for(int i = inBeg; i <= inEnd; ++i){
+        if(inorder[i] == preorder[preBeg])break;
+        ++cnt;
+    }
+
+    root->left = helper105(preorder, preBeg + 1, preBeg + cnt, inorder, inBeg, inBeg + cnt - 1);
+    root->right = helper105(preorder, preBeg + cnt + 1, preEnd, inorder, inBeg + cnt + 1, inEnd);
+    return root;
+}
+
+TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder){
+    int len = preorder.size();
+    return helper105(preorder, 0, len - 1, inorder, 0, len - 1);
+}
+
+TreeNode* helper106(const vector<int>& inorder, int inBeg, int inEnd,
+                    const vector<int>& postorder, int postBeg, int postEnd){
+    if(inBeg > inEnd or postBeg > postEnd or inEnd >= inorder.size()) return nullptr;
+    TreeNode* root = new TreeNode(postorder[postEnd]);
+    int cnt = 0;
+    for(int i = inBeg; i <= inEnd; ++i){
+        if(inorder[i] == postorder[postEnd])break;
+        ++cnt;
+    }
+
+    root->left = helper106(inorder, inBeg, inBeg + cnt - 1, postorder, postBeg, postBeg + cnt - 1);
+    root->right = helper106(inorder, inBeg + cnt + 1, inEnd, postorder, postBeg + cnt , postEnd - 1);
+    return root;
+}
+
+TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder){
+    int len = inorder.size();
+    return helper106(inorder, 0, len - 1, postorder, 0, len - 1);
+}
+
 namespace v2{
 
 string serialize(TreeNode* root) {

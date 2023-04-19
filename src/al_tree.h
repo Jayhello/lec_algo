@@ -141,6 +141,24 @@ int minDiffInBST(TreeNode* root);
 // https://leetcode.cn/problems/validate-binary-search-tree
 bool isValidBST1(TreeNode* root);
 
+//https://leetcode.cn/problems/recover-binary-search-tree/
+void recoverTree(TreeNode* root);
+
+//https://leetcode.cn/problems/find-mode-in-binary-search-tree/
+vector<int> findMode(TreeNode *root);
+
+// https://leetcode.cn/problems/insert-into-a-binary-search-tree/
+TreeNode* insertIntoBST(TreeNode* root, int val);
+
+//https://leetcode.cn/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/description/
+bool verifyPostorder(vector<int>& postorder);
+
+//https://leetcode.cn/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder);
+
+//https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder);
+
 namespace v2{
 
 string serialize(TreeNode* root);
