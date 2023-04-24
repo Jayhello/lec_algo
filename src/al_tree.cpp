@@ -1160,6 +1160,38 @@ TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder){
     return helper106(inorder, 0, len - 1, postorder, 0, len - 1);
 }
 
+TreeNode* helper108(const vector<int>& nums, int beg, int end){
+    if(beg > end)return nullptr;
+
+    int mid = (beg + end) / 2;
+    TreeNode* root = new TreeNode(nums[mid]);
+    root->left = helper108(nums, beg, mid - 1);
+    root->right = helper108(nums, mid + 1, end);
+    return root;
+}
+
+TreeNode* sortedArrayToBST(vector<int>& nums){
+    int len = nums.size();
+    return helper108(nums, 0, len - 1);
+}
+
+void flatten(TreeNode* root){
+    if(!root) return;
+
+    flatten(root->left);
+    flatten(root->right);
+
+    TreeNode* tmpRight = root->right;
+    TreeNode* tmpLeft = root->left;
+    if(!tmpLeft) return;
+    while(tmpLeft->right){
+        tmpLeft = tmpLeft->right;
+    }
+    root->right = root->left;
+    root->left = nullptr;
+    tmpLeft->right = tmpRight;
+}
+
 namespace v2{
 
 string serialize(TreeNode* root) {

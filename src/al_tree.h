@@ -159,6 +159,11 @@ TreeNode* buildTree(const vector<int>& preorder, const vector<int>& inorder);
 //https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
 TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder);
 
+//https://leetcode.cn/problems/convert-sorted-array-to-binary-search-tree/
+TreeNode* sortedArrayToBST(vector<int>& nums);
+
+void flatten(TreeNode* root);
+
 namespace v2{
 
 string serialize(TreeNode* root);
