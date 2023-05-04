@@ -88,6 +88,55 @@ int kthToLast(ListNode* head, int k){
     return head->val;
 }
 
+void helper206(ListNode* head, ListNode* prev, ListNode*& res){
+    if(!head)return;
+    if(!head->next)res = head;
+    helper206(head->next, head, res);
+    head->next = prev;
+}
+
+ListNode* reverseList(ListNode* head){
+    ListNode* res = head;
+    helper206(head, nullptr, res);
+    return res;
+}
+
+ListNode* reverseList2(ListNode* head){
+    ListNode* cur = head, *prev = nullptr;
+    while(cur){
+        ListNode* next = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = next;
+    }
+
+    return prev;
+}
+
+ListNode* reverseBetween(ListNode* head, int left, int right){
+    if(left == right) return head;
+
+    ListNode* cur = head;
+    int count = left;
+    while(count-- > 1){
+        cur = cur->next;
+    }
+
+    ListNode* tmp = cur;
+    vector<int> vec;
+    vec.reserve(right - left + 1);
+    for(int i = left; i <= right;++i){
+        vec.push_back(cur->val);
+        cur = cur->next;
+    }
+
+    for(auto it = vec.rbegin(); it != vec.rend(); ++it){
+        tmp->val = *it;
+        tmp = tmp->next;
+    }
+    return head;
+}
+
 ListNode* mergeKLists(vector<ListNode*>& lists){
     multiset<ListNodePtr, NodePtrComp> nodeSet;
 

@@ -17,6 +17,12 @@ bool isPalindrome(ListNode* head);
 //https://leetcode.cn/problems/kth-node-from-end-of-list-lcci/
 int kthToLast(ListNode* head, int k);
 
+//https://leetcode.cn/problems/reverse-linked-list
+ListNode* reverseList(ListNode* head);
+
+//https://leetcode.cn/problems/reverse-linked-list-ii
+ListNode* reverseBetween(ListNode* head, int left, int right);
+
 ListNode* mergeKLists(vector<ListNode*>& lists);
 
 ListNode* mergeTwoLists(ListNode* list1, ListNode* list2);
