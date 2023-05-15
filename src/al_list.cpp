@@ -137,6 +137,200 @@ ListNode* reverseBetween(ListNode* head, int left, int right){
     return head;
 }
 
+bool hasCycle(ListNode *head){
+    if(!head)return false;
+    std::unordered_set<ListNode*> setExists;
+    while(head){
+        if(setExists.count(head)) return true;
+        setExists.insert(head);
+        head = head->next;
+    }
+
+    return false;
+}
+
+ListNode *detectCycle(ListNode *head){
+    if(!head)return nullptr;
+    std::unordered_set<ListNode*> setExists;
+    while(head){
+        if(setExists.count(head)) return head;
+        setExists.insert(head);
+        head = head->next;
+    }
+
+    return nullptr;
+}
+
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB){
+    std::unordered_set<ListNode*> setExists;
+    while(headA){
+        setExists.insert(headA);
+        headA = headA->next;
+    }
+
+    while(headB){
+        if(setExists.count(headB)) return headB;
+        headB = headB->next;
+    }
+    return nullptr;
+}
+
+int getLength(ListNode* head){
+    int len = 0;
+    while(head){
+        ++len;
+        head = head->next;
+    }
+    return len;
+}
+
+ListNode *getIntersectionNode2(ListNode *head1, ListNode *head2){
+    int len1 = getLength(head1);
+    int len2 = getLength(head2);
+    int diff = std::abs(len1 - len2);
+    if(len1 > len2){
+        while(diff--) head1 = head1->next;
+    }else if(len2 > len1){
+        while(diff--) head2 = head2->next;
+    }
+
+    while(head1 and head2){
+        if(head1 == head2) return head1;
+        head1 = head1->next;
+        head2 = head2->next;
+    }
+
+    return nullptr;
+}
+
+ListNode* removeElements(ListNode* head, int val){
+    ListNode* ptr = head;
+    vector<int> vec;
+    while(ptr){
+        if(ptr->val != val){
+            vec.push_back(ptr->val);
+        }
+        ptr = ptr->next;
+    }
+
+    if(vec.empty())return nullptr;
+    auto prev = ptr;
+    ptr = head;
+    for(auto v : vec){
+        ptr->val = v;
+        prev = ptr;
+        ptr = ptr->next;
+    }
+    prev->next = nullptr;
+    return head;
+}
+
+ListNode* removeElements1(ListNode* head, int val){
+    ListNode* cur = nullptr, *next = head;
+    while(next){
+        if(next->val != val){
+            if(!cur){
+                cur = head;
+                cur->val = next->val;
+            }else{
+                cur = cur->next;
+                cur->val = next->val;
+            }
+        }
+        next = next->next;
+    }
+    if(!cur){
+        return nullptr;
+    }else{
+        cur->next = nullptr;
+    }
+    return head;
+}
+
+ListNode* deleteDuplicates(ListNode* head){
+    if(!head) return head;
+    vector<int> vec = {head->val};
+    ListNode* ptr = head->next;
+    while(ptr){
+        if(ptr->val != vec.back()){
+            vec.push_back(ptr->val);
+        }
+        ptr = ptr->next;
+    }
+
+    ptr = head;
+    ListNode* prev = head;
+    for(auto val : vec){
+        ptr->val = val;
+        prev = ptr;
+        ptr = ptr->next;
+    }
+    prev->next = nullptr;
+    return head;
+}
+
+ListNode* deleteDuplicates1(ListNode* head){
+    if(!head or !head->next) return head;
+
+    ListNode* cur = head, *next = head->next;
+    while(next){
+        if(next->val != cur->val){
+            cur = cur->next;
+            cur->val = next->val;
+        }
+        next = next->next;
+    }
+
+    cur->next = nullptr;
+    return head;
+}
+
+ListNode* deleteDuplicates2(ListNode* head){
+    ListNode* cur = head;
+    unordered_map<int, int> mValCount;
+    while(cur){
+        ++mValCount[cur->val];
+        cur = cur->next;
+    }
+
+    cur = head;
+    ListNode* prev = nullptr;
+    while(cur){
+        if(1 == mValCount[cur->val]){
+            if(!prev){
+                prev = head;
+                prev->val = cur->val;
+            }else{
+                prev = prev->next;
+                prev->val = cur->val;
+            }
+        }
+        cur = cur->next;
+    }
+
+    if(!prev){
+        return prev;
+    }else{
+        prev->next = nullptr;
+    }
+    return head;
+}
+
+ListNode* mergeTwoLists2(ListNode* list1, ListNode* list2){
+    if(!list1) return list2;
+    if(!list2) return list1;
+
+    ListNode* head = nullptr;
+    if(list1->val <= list2->val){
+        head = list1;
+        head->next = mergeTwoLists2(list1->next, list2);
+    }else{
+        head = list2;
+        head->next = mergeTwoLists2(list1, list2->next);
+    }
+    return head;
+}
+
 ListNode* mergeKLists(vector<ListNode*>& lists){
     multiset<ListNodePtr, NodePtrComp> nodeSet;
 
@@ -181,6 +375,29 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2){
     return dummy.next;
 }
 
+ListNode* helper23(ListNode* list1, ListNode* list2){
+    if(!list1) return list2;
+    if(!list2) return list1;
+
+    ListNode* head = nullptr;
+    if(list1->val <= list2->val){
+        head = list1;
+        head->next = helper23(list1->next, list2);
+    }else{
+        head = list2;
+        head->next = helper23(list1, list2->next);
+    }
+    return head;
+}
+
+ListNode* mergeKListsV2(vector<ListNode*>& lists) {
+    ListNode* res = nullptr;
+    for(auto p : lists){
+        res = helper23(res, p);
+    }
+    return res;
+}
+
 #ifdef isPalindrome_V1
 bool isPalindrome(ListNode* head){
     stack<ListNode*> sta;
@@ -199,7 +416,7 @@ bool isPalindrome(ListNode* head){
 }
 #endif
 
-bool isPalindrome(ListNode* head){
+bool isPalindrome2(ListNode* head){
     stack<ListNode*> sta;
     ListNode* tmp = head;
     while(tmp){
@@ -215,4 +432,27 @@ bool isPalindrome(ListNode* head){
     }
 
     return 0 == cnt;
+}
+
+ListNode* swapPairs(ListNode* head){
+    if(!head or !head->next) return head;
+
+    ListNode* prev = nullptr, *p1 = head, *p2 = head->next;
+    ListNode* res = p2;
+    while(p1 and p2){
+        ListNode* tmp = p2->next;
+        p2->next = p1;
+        if(prev){
+            prev->next = p2;
+        }
+        prev = p1;
+        p1 = tmp;
+        if(p1){
+            p2 = p1->next;
+        }else{
+            p2 = nullptr;
+        }
+    }
+    prev->next = p1;
+    return res;
 }

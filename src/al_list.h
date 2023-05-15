@@ -29,3 +29,23 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2);
 
 bool isPalindrome(ListNode* head);
 
+//https://leetcode.cn/problems/linked-list-cycle/
+bool hasCycle(ListNode *head);
+
+ListNode *detectCycle(ListNode *head);
+
+//https://leetcode.cn/problems/remove-duplicates-from-sorted-list
+ListNode* deleteDuplicates(ListNode* head);
+
+
+//https://leetcode.cn/problems/remove-linked-list-elements/
+ListNode* removeElements(ListNode* head, int val);
+
+//https://leetcode.cn/problems/merge-two-sorted-lists
+ListNode* mergeTwoLists(ListNode* list1, ListNode* list2);
+
+//https://leetcode.cn/problems/intersection-of-two-linked-lists/
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB);
+
+//https://leetcode.cn/problems/swap-nodes-in-pairs
+ListNode* swapPairs(ListNode* head);
