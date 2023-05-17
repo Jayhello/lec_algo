@@ -20,6 +20,6 @@ string tostr(const Container& c){
     return ss.str();
 }
 
-inline bool floatEqual(float a, float b, float EPSILON = 0.000001){
-    return std::fabs(a - b) < EPSILON;
-}
+//inline bool floatEqual(float a, float b, float EPSILON = 0.000001){
+//    return std::fabs(a - b) < EPSILON;
+//}

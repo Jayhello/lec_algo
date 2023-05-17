@@ -26,8 +26,8 @@ ListNode* createList(const vector<int>& vec){
 }
 
 void printListFront(ListNode* head){
-    if(!head)return;
-    std::cout << head->val;
+    if(!head){std::cout << std::endl; return;}
+    std::cout << head->val << " ";
     printListFront(head->next);
 }
 
@@ -455,4 +455,42 @@ ListNode* swapPairs(ListNode* head){
     }
     prev->next = p1;
     return res;
+}
+
+ListNode* removeNthFromEnd(ListNode* head, int n){
+    ListNode* fast = head;
+    while(n-- > 0) 	 fast = fast->next;
+    ListNode* prev = nullptr, *cur = head;
+    while(fast){
+        prev = cur;
+        cur = cur->next;
+        fast = fast->next;
+    }
+
+    if(!prev){
+        return head->next;
+    }else{
+        prev->next = cur->next;
+        return head;
+    }
+}
+
+ListNode* oddEvenList(ListNode* head){
+    if(!head or !head->next)	 return head;
+
+    ListNode* odd = head, *even = head->next;
+    while(even and even->next){
+        ListNode* oddNext = odd->next;
+        ListNode* evenNext = even->next;
+
+        odd->next = evenNext;
+        odd = odd->next;
+
+        even->next = evenNext->next;
+        even = even->next;
+
+        odd->next = oddNext;
+    }
+
+    return head;
 }

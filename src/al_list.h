@@ -49,3 +49,6 @@ ListNode *getIntersectionNode(ListNode *headA, ListNode *headB);
 
 //https://leetcode.cn/problems/swap-nodes-in-pairs
 ListNode* swapPairs(ListNode* head);
+
+//https://leetcode.cn/problems/odd-even-linked-list/
+ListNode* oddEvenList(ListNode* head);
