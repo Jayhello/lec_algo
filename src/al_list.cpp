@@ -494,3 +494,72 @@ ListNode* oddEvenList(ListNode* head){
 
     return head;
 }
+
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* dummy = new ListNode(0);
+    ListNode* ptr = dummy;
+    int carry = 0;
+    while(l1 or l2 or carry){
+        int sum = carry;
+        if(l1){
+            sum += l1->val;
+            l1 = l1->next;
+        }
+        if(l2){
+            sum += l2->val;
+            l2 = l2->next;
+        }
+        carry = sum / 10;
+        ptr->next = new ListNode(sum % 10);
+        ptr = ptr->next;
+    }
+
+    ptr = dummy->next;
+    delete dummy;
+    return ptr;
+}
+
+ListNode* reverseKGroup(ListNode* head, int k){
+    vector<int> vec;
+    ListNode* ptr = head;
+
+    while(ptr){
+        vec.push_back(ptr->val);
+        ptr = ptr->next;
+    }
+
+    ptr = head;
+    int times = vec.size() / k;
+    for(int t = 0; t < times; ++t){
+        for(int i = k - 1; i >= 0; --i){
+            ptr->val = vec[t * k + i];
+            ptr = ptr->next;
+        }
+    }
+
+    return head;
+}
+
+ListNode* partition(ListNode* head, int x){
+    vector<int> vLess, vGreater;
+    ListNode* ptr = head;
+    while(ptr){
+        if(ptr->val < x){
+            vLess.push_back(ptr->val);
+        }else{
+            vGreater.push_back(ptr->val);
+        }
+        ptr = ptr->next;
+    }
+
+    ptr = head;
+    for(auto v : vLess){
+        ptr->val = v;
+        ptr = ptr->next;
+    }
+    for(auto v : vGreater){
+        ptr->val = v;
+        ptr = ptr->next;
+    }
+    return head;
+}

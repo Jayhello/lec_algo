@@ -52,3 +52,12 @@ ListNode* swapPairs(ListNode* head);
 
 //https://leetcode.cn/problems/odd-even-linked-list/
 ListNode* oddEvenList(ListNode* head);
+
+//https://leetcode.cn/problems/add-two-numbers/
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2);
+
+//https://leetcode.cn/problems/reverse-nodes-in-k-group/
+ListNode* reverseKGroup(ListNode* head, int k);
+
+//https://leetcode.cn/problems/partition-list/
+ListNode* partition(ListNode* head, int x);
