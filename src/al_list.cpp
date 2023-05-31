@@ -563,3 +563,77 @@ ListNode* partition(ListNode* head, int x){
     }
     return head;
 }
+
+ListNode* rotateRight(ListNode* head, int k){
+    if(!head or k <= 0) return head;
+    vector<int> vec;
+    ListNode* ptr = head;
+    while(ptr){
+        vec.push_back(ptr->val);
+        ptr = ptr->next;
+    }
+
+    int len = int(vec.size());
+    if(k % len == 0) return head;
+    int offset = len - k % len;
+    ptr = head;
+    for(int c = 0; c < len; ++c){
+        ptr->val = vec[(c + offset) % len];
+        ptr = ptr->next;
+    }
+    return head;
+}
+
+ListNode* rotateRight1(ListNode* head, int k){
+    if(!head or !head->next or k <= 0) return head;
+
+    int len = 0;
+    ListNode* ptr = head;
+    while(ptr){
+        ++len;
+        ptr = ptr->next;
+    }
+
+    if(k % len == 0) return head;
+    k %= len;
+
+    ListNode* p2End = head;
+    while(--k > 0){
+        p2End = p2End->next;
+    }
+
+    ListNode* p2Beg = head, *p1End = head;
+    while(p2End->next){
+        p2End = p2End->next;
+        p1End = p2Beg;
+        p2Beg = p2Beg->next;
+    }
+
+    p2End->next = head;
+    p1End->next = nullptr;
+    return p2Beg;
+}
+
+ListNode* rotateRight2(ListNode* head, int k){
+    if(!head or !head->next or k <= 0) return head;
+
+    ListNode* pTail = head;
+    int len = 1;
+    while(pTail->next){
+        pTail = pTail->next;
+        ++len;
+    }
+
+    k %= len;
+    if(0 == k) return head;
+    ListNode* pNewTail = head;
+    for(int i = 0; i < len - k - 1; ++i){
+        pNewTail = pNewTail->next;
+    }
+
+    ListNode* res = pNewTail->next;
+    pTail->next = head;
+    pNewTail->next = nullptr;
+    return res;
+}
+
