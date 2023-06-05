@@ -340,3 +340,60 @@ string convert6(string s, int row){
 
     return res;
 }
+
+vector<int> exchange(vector<int>& nums){
+    int len = nums.size();
+    int i = 0, j = len -1;
+    while(i < j){
+        while(i < j and nums[i] % 2)++i;
+        while(i < j and (0 == nums[j] % 2))--j;
+        if(i >= j) break;
+        std::swap(nums[i++], nums[j--]);
+    }
+    return nums;
+}
+
+vector<int> exchange2(vector<int>& nums) {
+    std::stable_sort(nums.begin(), nums.end(), [](int a, int b){
+        if(a % 2) return true;
+        return false;
+    });
+    return nums;
+}
+
+vector<int> sortArrayByParity(vector<int>& nums){
+    int len = nums.size();
+    int i = 0, j = len  - 1;
+    while(i < j){
+        while(i < j and 0 == nums[i] % 2)++i;
+        while(i < j and 1 == nums[j] % 2)--j;
+        if(i >= j)break;
+        std::swap(nums[i++], nums[j--]);
+    }
+    return nums;
+}
+
+int removeDuplicates(vector<int>& nums){
+    int len = int(nums.size());
+    int i = 0, j = 1;
+    while(j < len){
+        if(nums[i] != nums[j]){
+            nums[++i] = nums[j];
+        }
+        ++j;
+    }
+    return i + 1;
+}
+
+int removeElement(vector<int>& nums, int val){
+    int len = int(nums.size());
+    int i = 0, j = 0;
+    while(j < len){
+        if(nums[j] != val){
+            nums[i++] = nums[j];
+        }
+        ++j;
+    }
+
+    return i;
+}

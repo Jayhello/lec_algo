@@ -33,3 +33,11 @@ vector<int> spiralOrder(vector<vector<int>>& matrix);
 vector<vector<int>> generateMatrix(int n);
 
 string convert6(string s, int row);
+
+vector<int> exchange(vector<int>& nums);
+
+//https://leetcode.cn/problems/remove-duplicates-from-sorted-array/
+int removeDuplicates(vector<int>& nums);
+
+//https://leetcode.cn/problems/remove-element/
+int removeElement(vector<int>& nums, int val);
