@@ -39,5 +39,14 @@ vector<int> exchange(vector<int>& nums);
 //https://leetcode.cn/problems/remove-duplicates-from-sorted-array/
 int removeDuplicates(vector<int>& nums);
 
+//https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/
+int removeDuplicates2(vector<int>& nums);
+
 //https://leetcode.cn/problems/remove-element/
 int removeElement(vector<int>& nums, int val);
+
+//https://leetcode.cn/problems/move-zeroes/
+void moveZeroes(vector<int>& nums);
+
+//https://leetcode.cn/problems/merge-sorted-array/
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n);

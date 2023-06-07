@@ -385,6 +385,19 @@ int removeDuplicates(vector<int>& nums){
     return i + 1;
 }
 
+int removeDuplicates2(vector<int>& nums){
+    int len = nums.size();
+    if(len <= 2) return len;
+    int i = 2, j = 2;
+    while(j < len){
+        if(nums[j] != nums[i - 2]){
+            nums[i++] = nums[j];
+        }
+        ++j;
+    }
+    return i;
+}
+
 int removeElement(vector<int>& nums, int val){
     int len = int(nums.size());
     int i = 0, j = 0;
@@ -396,4 +409,33 @@ int removeElement(vector<int>& nums, int val){
     }
 
     return i;
+}
+
+void moveZeroes(vector<int>& nums){
+    int len = nums.size();
+    int idx = 0;
+    for(int i = 0; i < len; ++i){
+        if(0 != nums[i]){
+            nums[idx++] = nums[i];
+        }
+    }
+
+    for( ; idx < len; ++idx){
+        nums[idx] = 0;
+    }
+}
+
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n){
+    int i = m - 1, j = n - 1;
+    int idx = m + n - 1;
+
+    while(i >=0 and j >= 0){
+        if(nums1[i] > nums2[j]){
+            nums1[idx--] = nums1[i--];
+        }else{
+            nums1[idx--] = nums2[j--];
+        }
+    }
+
+    while(j >= 0)nums1[idx--] = nums2[j--];
 }
