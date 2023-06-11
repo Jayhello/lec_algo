@@ -439,3 +439,37 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n){
 
     while(j >= 0)nums1[idx--] = nums2[j--];
 }
+
+vector<int> sortedSquares2(vector<int>& nums){
+    int len = nums.size();
+    int i = 0, j = len - 1, idx = len - 1;
+    vector<int> res(nums.size(), 0);
+    while(i <= j){
+        int n1 = std::abs(nums[i]);
+        int n2 = std::abs(nums[j]);
+        if(n1 > n2){
+            res[idx--] = n1 * n1;
+            ++i;
+        }else{
+            res[idx--] = n2 * n2;
+            --j;
+        }
+    }
+    return res;
+}
+
+int maxArea(vector<int>& height){
+    int len = height.size();
+    int i = 0, j = len - 1;
+    int res = 0;
+    while(i < j){
+        int area = std::min(height[i], height[j]) * (j - i);
+        res = std::max(res, area);
+        if(height[i] < height[j]){
+            ++i;
+        }else{
+            --j;
+        }
+    }
+    return res;
+}

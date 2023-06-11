@@ -50,3 +50,6 @@ void moveZeroes(vector<int>& nums);
 
 //https://leetcode.cn/problems/merge-sorted-array/
 void merge(vector<int>& nums1, int m, vector<int>& nums2, int n);
+
+//https://leetcode.cn/problems/container-with-most-water/
+int maxArea(vector<int>& height);
