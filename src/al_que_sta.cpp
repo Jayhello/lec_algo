@@ -85,6 +85,24 @@ bool backspaceCompare(string s, string t){
     return sta1 == sta2;
 }
 
+string helper844_v2(const string& str){
+    string res;
+    for(auto c : str){
+        if('#' == c){
+            if(not res.empty()) res.pop_back();
+        }else{
+            res.push_back(c);
+        }
+    }
+    return res;
+}
+
+bool backspaceCompare2(string s, string t){
+    string str1 = helper844_v2(s);
+    string str2 = helper844_v2(t);
+    return str1 == str2;
+}
+
 int calPoints(vector<string>& ops){
     vector<int> nums;
 
@@ -118,6 +136,31 @@ int evalRPN(vector<string>& tokens){
     }
 
     return sta.top();
+}
+
+int evalRPN2(vector<string>& tokens){
+    vector<int> vec;
+    for(const auto& s : tokens){
+        if(1 == s.size() and not std::isdigit(s[0])){
+            int n2 = vec.back();vec.pop_back();
+            int n1 = vec.back();vec.pop_back();
+            int n = 0;
+            if(s == "+"){
+                n = n1 + n2;
+            }else if(s == "-"){
+                n = n1 - n2;
+            }else if(s == "*"){
+                n = n1 * n2;
+            }else{
+                n = n1 / n2;
+            }
+            vec.push_back(n);
+        }else{
+            vec.push_back(std::stoi(s));
+        }
+    }
+
+    return vec[0];
 }
 
 #define IS_SPACE(ch) (' ' == ch)
@@ -352,4 +395,231 @@ int helper39(const string& sExpress, int& i){
 int calcExpress3(const string& sExpress){
     int i = 0;
     return helper39(sExpress, i);
+}
+
+vector<int> dailyTemperatures(vector<int>& temperatures) {
+    int len = temperatures.size();
+    vector<int> res(len, 0);
+    stack<int> sta;
+    for(int i = len - 1; i >= 0; --i){
+        while(not sta.empty() and temperatures[sta.top()] <= temperatures[i]){
+            sta.pop();
+        }
+        res[i] = sta.empty() ? 0 : sta.top();
+        sta.push(i);
+    }
+
+    for(int i = 0; i < len; ++i){
+        if(res[i] > 0)res[i] -= i;
+    }
+
+    return res;
+}
+
+//https://leetcode.cn/problems/largest-rectangle-in-histogram/
+int largestRectangleArea(vector<int>& vec){
+    int len = vec.size();
+    vector<int> vLeft(len, -1), vRight(len, len);
+    stack<int> sta;
+    for(int i = 0; i < len; ++i){
+        while(not sta.empty() and vec[sta.top()] >= vec[i])
+            sta.pop();
+        if(not sta.empty()) vLeft[i] = sta.top();
+        sta.push(i);
+    }
+
+    sta = {};
+    for(int i = len - 1; i >= 0; --i){
+        while(not sta.empty() and vec[sta.top()] >= vec[i])
+            sta.pop();
+        if(not sta.empty()) vRight[i] = sta.top();
+        sta.push(i);
+    }
+
+    int res = 0;
+    for(int i = 0; i < len; ++i){
+        int area = vec[i] * (vRight[i] - vLeft[i] - 1);
+        res = std::max(res, area);
+    }
+    return res;
+}
+
+//https://leetcode.cn/problems/maximal-rectangle/solution/
+int maximalRectangle(vector<vector<char>>& matrix){
+    int row = matrix.size(), col = matrix[0].size();
+    vector<int> heights(col, 0);
+    int res = 0;
+    for(int r = 0; r < row; ++r){
+        for(int c = 0; c < col; ++c){
+            if(matrix[r][c] == '0')heights[c] = 0;
+            else heights[c] += 1;
+        }
+
+        int area = largestRectangleArea(heights);
+        res = std::max(res, area);
+    }
+    return res;
+}
+
+class StockSpanner {
+public:
+    StockSpanner() {
+    }
+
+    int next(int price){
+        vec_.push_back(price);
+        while(not sta_.empty() and vec_[sta_.top()] <= price){
+            sta_.pop();
+        }
+
+        int len = vec_.size();
+        int res = 0;
+        if(sta_.empty()){
+            res = len;
+        }else{
+            res = len - sta_.top() - 1;
+        }
+
+        sta_.push(len - 1);
+        return res;
+    }
+
+    vector<int>  vec_;
+    stack<int>   sta_;
+};
+
+string removeDuplicateLetters(string s){
+    int len = s.size();
+    vector<int> counts(26, 0);
+    for(auto c : s)++counts[c - 'a'];
+
+    stack<char> sta;
+    vector<bool> visited(26, false);
+    for(auto c : s){
+        int idx = c - 'a';
+        --counts[idx];
+        if(visited[idx]) continue;
+
+        while(not sta.empty() and sta.top() > c){
+            if(counts[sta.top() - 'a'] == 0) break;
+            visited[sta.top() - 'a'] = false;
+            sta.pop();
+        }
+
+        sta.push(c);
+        visited[idx] = true;
+    }
+
+    string res;
+    while(not sta.empty()){
+        res.push_back(sta.top());
+        sta.pop();
+    }
+
+    std::reverse(res.begin(), res.end());
+    return res;
+}
+
+// https://leetcode.cn/problems/remove-k-digits/
+string removeKdigits(string num, int k){
+    if(k >= num.size()) return "0";
+    stack<char> sta;
+    for(auto c : num){
+        while(k > 0 and not sta.empty() and sta.top() > c){
+            sta.pop();
+            --k;
+        }
+        sta.push(c);
+    }
+
+    while(k > 0){
+        sta.pop();
+        --k;
+    }
+
+    string res;
+    while(not sta.empty()){
+        res.push_back(sta.top());
+        sta.pop();
+    }
+    std::reverse(res.begin(), res.end());
+    if(res[0] != '0') return res;
+    int i = 0;
+    for(; i < res.size() and res[i] == '0'; ++i)
+        ;
+    return i < res.size() ? res.substr(i) : "0";
+}
+
+vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2){
+    int len = nums2.size();
+    std::unordered_map<int, int> mValNext;
+    stack<int> sta;
+    for(int i = len - 1; i >= 0; --i){
+        while(not sta.empty() and sta.top() < nums2[i]){
+            sta.pop();
+        }
+        mValNext[nums2[i]] = sta.empty() ? -1 : sta.top();
+        sta.push(nums2[i]);
+    }
+
+    vector<int> res;
+    for(auto v : nums1){
+        res.push_back(mValNext[v]);
+    }
+    return res;
+}
+
+bool isValid(string s){
+    const static map<char, char> mLeftRight{{'(', ')'}, {'[', ']'}, {'{', '}'}};
+    const static map<char, char> mRightLeft{{')', '('}, {']', '['}, {'}', '{'}};
+    stack<char> sta;
+    for(auto c : s){
+        if(mLeftRight.count(c)){
+            if(not sta.empty() and mRightLeft.count(sta.top())){
+                return false;
+            }
+            sta.push(c);
+        }else{
+            if(sta.empty())return false;
+            auto it = mRightLeft.find(c);
+            if(it == mRightLeft.end() or it->second != sta.top()) return false;
+            sta.pop();
+        }
+    }
+    return sta.empty();
+}
+
+void split(const string& str, char ch, vector<string>& vec){
+    int len = str.size(), i = 0;
+    while(i < len){
+        while(i < len and str[i] == ch)++i;
+        if(i >= len) break;
+        int s = i;
+        while(i < len and str[i] != ch) ++i;
+        vec.push_back(str.substr(s, i - s));
+    }
+}
+
+string simplifyPath2(string path){
+    vector<string> vec;
+    split(path, '/', vec);
+
+    vector<string> sta;
+    int len = vec.size();
+    for(int i = 0; i < len; ++i){
+        if("." == vec[i]){
+        }else if(".." == vec[i]){
+            if(not sta.empty())sta.pop_back();
+        }else{
+            sta.push_back(vec[i]);
+        }
+    }
+
+    len = sta.size();
+    string res = "/";
+    for(int i = 0; i < len; ++i){
+        res += sta[i];
+        if(i < len - 1) res += '/';
+    }
+    return res;
 }

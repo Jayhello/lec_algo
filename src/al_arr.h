@@ -53,3 +53,7 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n);
 
 //https://leetcode.cn/problems/container-with-most-water/
 int maxArea(vector<int>& height);
+
+//https://leetcode.cn/problems/largest-rectangle-in-histogram/
+int largestRectangleArea(vector<int>& heights);
+

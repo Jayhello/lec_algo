@@ -39,3 +39,10 @@ int calcExpress3(const string& sExpress);
 
 // todo
 // https://leetcode.cn/problems/design-circular-queue/
+
+
+//https://leetcode.cn/problems/daily-temperatures/
+vector<int> dailyTemperatures(vector<int>& temperatures);
+
+//https://leetcode.cn/problems/valid-parentheses/
+bool isValid(string s);

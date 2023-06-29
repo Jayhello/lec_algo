@@ -473,3 +473,78 @@ int maxArea(vector<int>& height){
     }
     return res;
 }
+
+int trap(vector<int>& height){
+    int len = height.size();
+    if(len < 3){return 0;}
+    std::vector<std::pair<int, int>> vMaxLeftRight(len, {0, 0});
+
+    for(int i = 1; i < len; ++i){
+        vMaxLeftRight[i].first = std::max(vMaxLeftRight[i - 1].first, height[i - 1]);
+    }
+
+    for(int j = len - 2; j >= 0; --j){
+        vMaxLeftRight[j].second = std::max(vMaxLeftRight[j + 1].second, height[j + 1]);
+    }
+
+    int res = 0;
+    for(int i = 1; i < len - 1; ++i){
+        if(vMaxLeftRight[i].first <= height[i] or vMaxLeftRight[i].second <= height[i])
+            continue;
+        int h = std::min(vMaxLeftRight[i].first, vMaxLeftRight[i].second) - height[i];
+        res += h;
+    }
+    return res;
+}
+
+int largestRectangleArea(vector<int>& heights){
+    int len = heights.size();
+    int res = 0;
+    for(int i = 0; i < len; ++i){
+        if(0 == heights[i]) continue;
+        int iMinHeight = heights[i];
+        res = std::max(res, iMinHeight);
+        for(int j = i + 1; j < len; ++j){
+            if(0 == heights[j]) break;
+            iMinHeight = std::min(heights[j], iMinHeight);
+            res = std::max(res, iMinHeight * (j - i + 1));
+        }
+    }
+    return res;
+}
+
+int largestRectangleArea1(vector<int>& heights){
+    std::unordered_map<int, int> mHeightArea;
+    int len = heights.size();
+    int res = 0;
+    for(int i = 0; i < len; ++i){
+        if(mHeightArea.count(heights[i]))continue;
+        int cnt = 1;
+        for(int j = i - 1; j >=0 and heights[j] >= heights[i]; --j)++cnt;
+        for(int j = i + 1; j < len and heights[j] >= heights[i]; ++j)++cnt;
+
+        int area = heights[i] * cnt;
+        res = std::max(res, area);
+        mHeightArea[heights[i]] = area;
+    }
+
+    return res;
+}
+
+int largestRectangleArea3(vector<int>& heights){
+    int len = heights.size();
+    int res = 0;
+    for(int i = 0; i < len; ++i){
+        if(0 == heights[i]) continue;
+        if(i > 0 and heights[i] == heights[i - 1]) continue;
+
+        int cnt = 1;
+        for(int j = i - 1; j >= 0 and heights[j] >= heights[i]; --j)++cnt;
+        for(int j = i + 1; j < len and heights[j] >= heights[i]; ++j)++cnt;
+
+        int area = heights[i] * cnt;
+        res = std::max(res, area);
+    }
+
+    return res;
+}
