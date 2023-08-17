@@ -4,9 +4,11 @@
 
 #include "al_arr.h"
 #include <unordered_map>
+#include <map>
 #include <unordered_set>
 #include <algorithm>
 #include <set>
+#include <climits>
 
 vector<int> twoSum(const vector<int>& nums, int target){
     unordered_map<int, int> mValIdx;
@@ -546,5 +548,218 @@ int largestRectangleArea3(vector<int>& heights){
         res = std::max(res, area);
     }
 
+    return res;
+}
+
+int searchInsert(vector<int>& nums, int target){
+    int len = nums.size();
+    int l = 0, r = len - 1;
+    while(l <= r){
+        int mid = (l + r) / 2;
+        if(nums[mid] == target){
+            return mid;
+        }else if(nums[mid] > target){
+            r = mid - 1;
+        }else{
+            l = mid + 1;
+        }
+    }
+
+    if(r < 0) return 0;
+    if(l >= len) return len;
+    return r + 1;
+}
+
+int helper34_1(const vector<int>& nums, int target, int left, int right){
+    while(left <= right){
+        int mid = (left + right) / 2 ;
+        if(nums[mid] > target){
+            right = mid - 1;
+        }else if(nums[mid] < target){
+            left = mid + 1;
+        }else{
+            if(mid > 0 and nums[mid - 1] == target){
+                right = mid - 1;
+            }else{
+                return mid;
+            }
+        }
+    }
+    return -1;
+}
+
+int helper34_2(const vector<int>& nums, int target, int left, int right){
+    while(left <= right){
+        int mid = (left + right) / 2 ;
+        if(nums[mid] > target){
+            right = mid - 1;
+        }else if(nums[mid] < target){
+            left = mid + 1;
+        }else{
+            if(mid < right and nums[mid + 1] == target){
+                left = mid + 1;
+            }else{
+                return mid;
+            }
+        }
+    }
+    return -1;
+}
+
+vector<int> searchRange(vector<int>& nums, int target){
+    int len = nums.size();
+    int left = helper34_1(nums, target, 0, len - 1);
+    if(left < 0) return {-1, -1};
+    int right = helper34_2(nums, target, left, len - 1);
+    return {left, right};
+}
+
+
+int search33(vector<int>& nums, int target){
+    int len = nums.size();
+    int left = 0, right = len - 1;
+    while(left <= right){
+        int mid = (left + right) / 2;
+        if(target == nums[mid]){
+            return mid;
+        }else if(target > nums[mid]){
+            if(nums[left] < nums[mid]){
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }else{
+//            if(nums[] >= nums[mid]){
+//                right = mid - 1;
+//            }else{
+//                left = mid + 1;
+//            }
+        }
+    }
+
+    return -1;
+}
+
+
+vector<int> twoSum(vector<int>& nums, int target){
+	std::multimap<int, int> mValIdx;
+	for(int i = 0; i < nums.size(); ++i){
+          mValIdx.insert({nums[i], i});
+	}
+
+    auto it1 = mValIdx.begin();
+	auto it2 = --mValIdx.end();
+	while(it1 != it2){
+		int n = it1->first + it2->first;
+		if(n == target){
+			return {it1->second, it2->second};
+		}else if(n > target){
+			--it2;
+		}else{
+			++it1;
+		}
+	}
+
+	return {-1, -1};
+}
+
+vector<int> twoSum2(vector<int>& nums, int target){
+    std::unordered_map<int, int> mValIdx;
+    for(int i = 0; i < nums.size(); ++i){
+        int n = target - nums[i];
+        auto it = mValIdx.find(n);
+        if(it != mValIdx.end()){
+            return {i, it->second};
+        }
+        mValIdx[nums[i]] = i;
+    }
+
+    return {-1, -1};
+}
+
+void helper15(const vector<int>& nums, int idx, vector<vector<int>>& res){
+    int len = nums.size();
+    int left = idx + 1, right = len - 1, target = -nums[idx];
+    while(left < right){
+        int n = nums[left] + nums[right];
+        if(n > target){
+            --right;
+        }else if(n < target){
+            ++left;
+        }else{
+            res.push_back({nums[left++], nums[right--]});
+        }
+    }
+}
+
+vector<vector<int>> threeSumV2(vector<int>& nums){
+    std::stable_sort(nums.begin(), nums.end());
+    int len = nums.size();
+    std::set<vector<int>> setVec;
+    for(int i = 0; i < len; ++i){
+        if(nums[i] > 0)break;
+        if(i > 0 and nums[i] == nums[i - 1])continue;
+
+        vector<vector<int>> vecVec;
+        helper15(nums, i, vecVec);
+        for(auto& vec : vecVec){
+            vec.insert(vec.begin(), nums[i]);
+            setVec.insert(vec);
+        }
+    }
+
+    vector<vector<int>> res(setVec.begin(), setVec.end());
+    return res;
+}
+
+int helper16(const vector<int>& nums, int idx, int target){
+    int left = idx, right = int(nums.size()) - 1;
+    int ret = nums[idx - 1] + nums[left] + nums[right];
+    while(left < right){
+        int num = nums[left] + nums[right] + nums[idx - 1];
+        if(std::abs(ret - target) > std::abs(num - target)){
+            ret = num;
+        }
+        if(num == target){
+            break;
+        }else if(num < target){
+            ++left;
+        }else{
+            --right;
+        }
+    }
+
+    return ret;
+}
+
+int threeSumClosest(vector<int>& nums, int target) {
+    int len = nums.size();
+    std::stable_sort(nums.begin(), nums.end());
+
+    int ret = nums[0] + nums[1] + nums[2];
+    for(int i = 0; i < len - 2; ++i){
+        int tmp = helper16(nums, i + 1, target);
+        if(std::abs(ret - target) >= std::abs(tmp - target)){
+            ret = tmp;
+            if(target == ret)break;
+        }
+    }
+
+    return ret;
+}
+
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    map<int, int> mValCnt;
+    vector<int> vUniq;
+    for(auto n : nums){
+        ++mValCnt[n];
+        if(1 == mValCnt[n]) vUniq.push_back(n);
+    }
+
+    std::stable_sort(vUniq.begin(), vUniq.end(), [&](int v1, int v2){
+        return mValCnt[v1]  > mValCnt[v2];
+    });
+
+    vector<int> res(vUniq.begin(), vUniq.begin() + k);
     return res;
 }

@@ -7,6 +7,9 @@
 #include "src/al_arr.h"
 
 int main(int argc, char** argv){
+    vector<int> nums = {2,3,8,9,10};
+    threeSumClosest(nums, 16);
+
     testing::InitGoogleTest(&argc, argv);
     testing::FLAGS_gtest_filter = "convert6*";
     return RUN_ALL_TESTS();

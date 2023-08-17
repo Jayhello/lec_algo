@@ -4,6 +4,7 @@
 
 #include "al_slip_wnd.h"
 #include <unordered_map>
+#include <map>
 #include <climits>
 
 #ifdef USE_findMaxConsecutiveOnes_v1
@@ -119,7 +120,40 @@ string minWindow(string s, string t){
 }
 #endif
 
+bool contains(const unordered_map<char, int>& mChCnt1, const unordered_map<char, int>& mChCnt2){
+    for(const auto& kv : mChCnt2){
+        auto it = mChCnt1.find(kv.first);
+        if(it == mChCnt1.end() or it->second < kv.second){
+            return false;
+        }
+    }
+    return true;
+}
+
 string minWindow(string s, string t){
+    int len_s = s.size(), len_t = t.size();
+    unordered_map<char, int> mChCntT;
+    for(auto c : t)++mChCntT[c];
+
+    string res;
+    unordered_map<char, int> mChCntWnd;
+    int left = 0, right = 0;
+    while(right < len_s){
+        ++mChCntWnd[s[right++]];
+        if(right - left < len_t or not contains(mChCntWnd, mChCntT))continue;
+
+        while(left < right){
+            if(res.empty() or res.size() > right - left){
+                res = s.substr(left, right - left);
+            }
+
+            --mChCntWnd[s[left++]];
+            if(not contains(mChCntWnd, mChCntT))break;
+        }
+    }
+
+    return res;
+    /*
     unordered_map<char, int> mt;
     for(auto ch : t){
         ++mt[ch];
@@ -146,6 +180,7 @@ string minWindow(string s, string t){
     }
 
     return res;
+    */
 }
 
 //#define checkInclusion_V1
@@ -181,6 +216,27 @@ bool checkInclusion(string s1, string s2){
 #endif
 
 bool checkInclusion(string s1, string s2){
+    int len1 = s1.size(), len2 = s2.size();
+    if(len1 > len2)return false;
+
+    unordered_map<char, int> mc1, mc_wnd;
+    for(auto c : s1)++mc1[c];
+    for(int i = 0; i < len1 - 1; ++i)++mc_wnd[s2[i]];
+
+    for(int i = len1 - 1; i < len2; ++i){
+        ++mc_wnd[s2[i]];
+        auto it = mc1.find(s2[i]);
+        if(it != mc1.end() and it->second == mc_wnd[s2[i]] and mc_wnd == mc1){
+            return true;
+        }
+
+        --mc_wnd[s2[i + 1 - len1]];
+        if(0 == mc_wnd[s2[i + 1 - len1]]){
+            mc_wnd.erase(s2[i + 1 - len1]);
+        }
+    }
+    return false;
+    /*
     if(s1.size() > s2.size()) return false;
 
     unordered_map<char, int> mc1, mc2;
@@ -201,6 +257,7 @@ bool checkInclusion(string s1, string s2){
     }
 
     return false;
+    */
 }
 
 //s = "abcabcbb" -> "abc"
@@ -223,6 +280,28 @@ int lengthOfLongestSubstring(string s){
     }
 
     return cnt;
+}
+
+int helper3(const string& s, int l, int r, char c){
+    for(; l <= r and s[l] != c; ++l){
+    }
+    return l > r ? -1 : l;
+}
+
+int lengthOfLongestSubstring1(string s){
+    if(s.empty())return 0;
+    int len = s.size();
+    int i = 0, j = 1;
+    int res = 1;
+    for(; j < len; ++j){
+        int idx = helper3(s, i, j - 1, s[j]);
+        if(idx < 0){
+            res = std::max(res, j - i + 1);
+        }else{
+            i = idx + 1;
+        }
+    }
+    return res;
 }
 
 /*
@@ -287,7 +366,7 @@ int findLength(const vector<int>& nums1, const vector<int>& nums2){
 }
 #endif
 
-int findLength(const vector<int>& nums1, const vector<int>& nums2){
+int findLength1(const vector<int>& nums1, const vector<int>& nums2){
     int len1 = int(nums1.size()), len2 = int(nums2.size());
     int ret = 0, cnt = (len1 + len2 - 1);
 
@@ -332,4 +411,25 @@ bool increasingTriplet(const vector<int>& nums){
     }
 
     return false;
+}
+
+vector<int> maxSlidingWindow(vector<int>& nums, int k){
+    int len = nums.size();
+    std::map<int, int> m_val_cnt;
+    for(int i = 0; i < k; ++i)++m_val_cnt[nums[i]];
+    vector<int> res;
+    auto it = --m_val_cnt.end();
+    res.push_back(it->first);
+
+    for(int i = k; i < len; ++i){
+        ++m_val_cnt[nums[i]];
+        int v = nums[i - k];
+        --m_val_cnt[v];
+        if(0 == m_val_cnt[v])m_val_cnt.erase(v);
+
+        auto it = --m_val_cnt.end();
+        res.push_back(it->first);
+    }
+
+    return res;
 }

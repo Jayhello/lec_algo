@@ -57,3 +57,14 @@ int maxArea(vector<int>& height);
 //https://leetcode.cn/problems/largest-rectangle-in-histogram/
 int largestRectangleArea(vector<int>& heights);
 
+//https://leetcode.cn/problems/search-insert-position/
+int searchInsert(vector<int>& nums, int target);
+
+//https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/
+vector<int> searchRange(vector<int>& nums, int target);
+
+//https://leetcode.cn/problems/search-in-rotated-sorted-array/
+int search33(vector<int>& nums, int target);
+
+int threeSumClosest(vector<int>& nums, int target);
+

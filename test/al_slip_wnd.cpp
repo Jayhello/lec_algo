@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv){
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "increasingTriplet*";
+    testing::FLAGS_gtest_filter = "checkInclusion*";
     return RUN_ALL_TESTS();
 
     return 0;
@@ -25,6 +25,7 @@ TEST(increasingTriplet, basic) {
 };
 
 TEST(findLength, basic) {
+    /*
     EXPECT_EQ(findLength({1}, {1}), 1);
     EXPECT_EQ(findLength({1}, {0}), 0);
     EXPECT_EQ(findLength({0}, {1}), 0);
@@ -36,6 +37,7 @@ TEST(findLength, basic) {
     EXPECT_EQ(findLength({1,2,3,2,1}, {3,2,1,4,7}), 3);
     EXPECT_EQ(findLength({1,2,3,2,1, 3, 4}, {1,2,3,4,2, 1, 3 ,4}), 4);
     EXPECT_EQ(findLength({1,2,3,2,1}, {3,2,1,4}), 3);
+    */
 };
 
 TEST(minSubArrayLen, basic){
