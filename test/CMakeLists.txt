@@ -32,3 +32,6 @@ AddTestTarget(al_bfs_test al_bfs_test.cpp)
 
 AddTestTarget(al_tree_test al_tree_test.cpp)
 
+AddTestTarget(al_sort_test al_sort_test.cpp)
+
+

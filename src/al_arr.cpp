@@ -763,3 +763,34 @@ vector<int> topKFrequent(vector<int>& nums, int k) {
     vector<int> res(vUniq.begin(), vUniq.begin() + k);
     return res;
 }
+
+class KthLargest {
+public:
+    KthLargest(int k, vector<int>& nums):k_(k), setNums_(nums.begin(), nums.end()){
+        if(setNums_.size() >= k){
+            kNum_ = getKNum();
+        }else{
+            kNum_ = -10000000;
+        }
+    }
+
+    int add(int val) {
+        setNums_.insert(val);
+        if(val > kNum_){
+            kNum_ = getKNum();
+        }
+        return kNum_;
+    }
+
+    int getKNum(){
+        auto it = setNums_.begin();
+        for(int i = 0; i < k_; ++i){
+            ++it;
+        }
+        return *it;
+    }
+
+    int k_;
+    std::multiset<int, std::greater<int>> setNums_;
+    int  kNum_;
+};

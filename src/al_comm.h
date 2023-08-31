@@ -15,6 +15,7 @@
 #include <unordered_set>
 #include <cmath>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -34,4 +35,23 @@ inline bool floatEqual(float a, float b, float EPSILON = 0.000001){
 
 inline bool floatGt(float a, float b, float EPSILON = 0.000001){
     return std::fabs(a - b) >= EPSILON;
+}
+
+template<typename Seq>
+inline void print(const Seq& seq){
+    stringstream ss;
+    for(const auto& item : seq){
+        ss << item << " ";
+    }
+    cout << ss.str() << endl;
+}
+
+template<typename Queue>
+inline void print_que(Queue& que){
+    stringstream ss;
+    while(not que.empty()){
+        ss << que.top() << " ";
+        que.pop();
+    }
+    cout << ss.str() << endl;
 }
