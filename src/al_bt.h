@@ -14,6 +14,9 @@ vector<vector<int>> permute46(const vector<int>& nums);
 //https://leetcode.cn/problems/permutations-ii/
 vector<vector<int>> permuteUnique(vector<int>& nums);
 
+//https://leetcode.cn/problems/permutation-sequence/description/
+string getPermutation(int n, int k);
+
 //https://leetcode.cn/problems/letter-case-permutation/
 vector<string> letterCasePermutation(string s);
 

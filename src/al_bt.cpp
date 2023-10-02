@@ -31,6 +31,30 @@ vector<vector<int>> permute46(const vector<int>& nums){
     return vRes;
 }
 
+void helper46_v2(const vector<int>& nums, vector<int>& path, vector<bool>& visited, vector<vector<int>>& res){
+    if(path.size() == nums.size()){
+        res.push_back(path);
+        return;
+    }
+
+    for(int i = 0; i < nums.size(); ++i){
+        if(visited[i]) continue;
+        visited[i] = true;
+        path.push_back(nums[i]);
+        helper46_v2(nums, path, visited, res);
+        visited[i] = false;
+        path.pop_back();
+    }
+}
+
+vector<vector<int>> permute46_v2(vector<int>& nums){
+    vector<int> path;
+    vector<bool> visited(nums.size(), false);
+    vector<vector<int>> res;
+    helper46_v2(nums, path, visited, res);
+    return res;
+}
+
 void permuteUniqueHelper47(const vector<int>& vNum, vector<bool>& vVisit, vector<int>& vTrack, vector<vector<int>>& vRes){
     if(vTrack.size() == vNum.size()){
         vRes.push_back(vTrack);
@@ -264,6 +288,49 @@ void helper17(const vector<string>& vStr, int idx, string& tracks, vector<string
             tracks.pop_back();
         }
     }
+}
+
+void helper60(const string& src, int& n, vector<bool>& visited, string& tracks, string& res){
+    if(tracks.size() == src.size()){
+        --n;
+        if(0 == n){
+            res = tracks;
+            return;
+        }
+    }
+
+    for(int i = 0; i < src.size() and n > 0; ++i){
+        if(visited[i]) continue;
+        visited[i] = true;
+        tracks.push_back(src[i]);
+        helper60(src, n, visited, tracks, res);
+        visited[i] = false;
+        tracks.pop_back();
+    }
+}
+
+string getPermutation(int n, int k) {
+    string s;
+    for(int i = 1; i <= n; ++i)s.push_back(i + '0');
+    if(n <= 1 or k <= 1) return s;
+
+    int total = 1;
+    for(int i = 2; i <= n; ++i) total *= i;
+
+    int per = total / n;
+    int i = (k - 1) / per;
+    if(i > 0){
+        std::swap(s[0], s[i]);
+        std::stable_sort(s.begin() + 1, s.end());
+    }
+    int cnt = k % per;
+    cnt = (cnt > 0 ? cnt : per);
+    if(k <= 1) return s;
+
+    vector<bool> visited(n, false);
+    string tracks, res;
+    helper60(s, cnt, visited, tracks, res);
+    return res;
 }
 
 vector<string> letterCombinations(string digits){

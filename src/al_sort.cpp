@@ -119,3 +119,86 @@ vector<int> exchange21(vector<int>& nums) {
     }
     return nums;
 }
+
+bool canDel(const string& src, const string& dst){
+    int i = 0, len = src.size();
+    for(auto c : dst){
+        for(; i < len and src[i] != c; ++i){
+        }
+
+        if(i >= len) return false;
+        if(src[i] == c)++i;
+    }
+    return true;
+}
+
+string findLongestWord(string s, vector<string>& dictionary){
+    std::stable_sort(dictionary.begin(), dictionary.end(), [](const string& s1, const string& s2){
+        if(s1.size() > s2.size()){
+            return true;
+        }else if(s1.size() == s2.size()){
+            return s1 < s2;
+        }else{
+            return false;
+        }
+    });
+
+    for(const string& tmp : dictionary){
+        if(canDel(s, tmp)){
+            return tmp;
+        }
+    }
+
+    return "";
+}
+
+int majorityElement(vector<int>& nums){
+    int n = nums[0], count = 1;
+    for(int i = 1; i < nums.size(); ++i){
+        if(nums[i] == n){
+            ++count;
+        }else if(--count == 0){
+            n = nums[i];
+            count = 1;
+        }
+    }
+    return n;
+}
+
+
+int pairCount(vector<int>& nums, vector<int>& vTmp, int b, int m, int e){
+    int i = m, j = e, k = e, cnt = 0;
+    while(i >= b and j > m){
+        if(nums[i] > nums[j]){
+            cnt = cnt + (j - m);
+            vTmp[k--] = nums[i--];
+        }else{
+            vTmp[k--] = nums[j--];
+        }
+    }
+
+    while(i >= b)vTmp[k--] = nums[i--];
+    while(j > m)vTmp[k--] = nums[j--];
+
+    for(int i = b; i <= e; ++i){
+        nums[i] = vTmp[i];
+    }
+    return cnt;
+}
+
+int reversePairs_(vector<int>& nums, vector<int>& vTmp, int b, int e){
+    if(b < e){
+        int mid = (b + e) / 2;
+        int cnt = reversePairs_(nums, vTmp, b, mid);
+        cnt += reversePairs_(nums, vTmp, mid + 1, e);
+        cnt += pairCount(nums, vTmp, b, mid, e);
+        return cnt;
+    }
+    return 0;
+}
+
+int reversePairs(vector<int>& nums){
+    vector<int> vTmp = nums;
+    int len = nums.size();
+    return reversePairs_(nums, vTmp, 0, len - 1);
+}

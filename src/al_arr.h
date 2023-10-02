@@ -66,5 +66,10 @@ vector<int> searchRange(vector<int>& nums, int target);
 //https://leetcode.cn/problems/search-in-rotated-sorted-array/
 int search33(vector<int>& nums, int target);
 
+//https://leetcode.cn/problems/sqrtx
+int mySqrt(int x);
+
 int threeSumClosest(vector<int>& nums, int target);
 
+//https://leetcode.cn/problems/is-subsequence
+bool isSubsequence(string s, string t);

@@ -794,3 +794,95 @@ public:
     std::multiset<int, std::greater<int>> setNums_;
     int  kNum_;
 };
+
+bool isSubsequence(string s, string t){
+    int len1 = s.size(), len2 = t.size();
+    int i = 0, j = 0;
+    while(i < len1 and j < len2){
+        if(s[i] == t[j]){
+            ++i;
+        }
+        ++j;
+    }
+    return i == len1;
+}
+
+vector<string> summaryRanges(vector<int>& nums){
+    if(nums.empty())return {};
+
+    int len = nums.size(), i = 0;
+    vector<string> res;
+    while(i < len){
+        int j = i + 1;
+
+        while(j < len){
+            long diff = long(nums[j]) - long(nums[j - 1]);
+            if(1 == diff){
+                ++j;
+                continue;
+            }
+            break;
+        }
+
+        if(j - i > 1){
+            string tmp = to_string(nums[i]) + "->" + to_string(nums[j - 1]);
+            res.push_back(tmp);
+        }else{
+            res.push_back(to_string(nums[i]));
+        }
+        i = j;
+    }
+
+    return res;
+}
+
+string addBinary(string a, string b) {
+    int len1 = a.size(), len2 = b.size();
+    int i = len1 - 1, j = len2 - 1, carry = 0;
+    string res;
+    while(i >= 0 or j >= 0 or carry){
+        int n1 = (i >= 0 ? a[i--] - '0' : 0);
+        int n2 = (j >= 0 ? b[j--] - '0' : 0);
+        int sum = n1 + n2 + carry;
+        int n = sum % 2;
+        carry = sum / 2;
+        res.push_back('0' + n);
+    }
+
+    while(res.size() > 1 and '0' == res.back())res.pop_back();
+    std::reverse(res.begin(), res.end());
+
+    return res;
+}
+
+int mySqrt(int x) {
+    int left = 1, right = x;
+    while(left <= right){
+        int mid = left + (right - left) / 2;
+        if(mid <= (x / mid)){
+            if((mid + 1) > (x / (mid + 1))){
+                return mid;
+            }
+            left = mid + 1;
+        }else{
+            right = mid - 1;
+        }
+    }
+    return x;
+}
+
+int findMin(vector<int>& nums) {
+    int len = nums.size();
+    int left = 0, right = len - 1;
+    while(left <= right){
+        int mid = (left + right) / 2;
+        if(nums[left] <= nums[right]){
+            return left;
+        }else if(nums[left] <= nums[mid]){
+            left = mid + 1;
+        }else{
+            right = mid;
+        }
+    }
+    return - 1;
+}
