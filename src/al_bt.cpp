@@ -333,6 +333,35 @@ string getPermutation(int n, int k) {
     return res;
 }
 
+
+void nextPermutation(std::vector<int>& nums){
+    int len = nums.size();
+    if(len <= 1) return;
+
+    int e = len, b = len;
+    for(int i = len - 1; i >= 1; --i){
+        int tmp_b = len, tmp_e = len;
+        for(int j = i - 1; j >= 0; --j){
+            if(nums[i] > nums[j]){
+                tmp_b = j;
+                tmp_e = i;
+                break;
+            }
+        }
+        if(b == len or (len != tmp_b and tmp_b > b)){
+            b = tmp_b;
+            e = tmp_e;
+        }
+    }
+
+    if(b < len){
+        std::swap(nums[b], nums[e]);
+        std::stable_sort(nums.begin() + b + 1, nums.end());
+    }else{
+        std::stable_sort(nums.begin(), nums.end());
+    }
+}
+
 vector<string> letterCombinations(string digits){
     if(digits.empty())return {};
 

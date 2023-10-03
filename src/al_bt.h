@@ -17,6 +17,10 @@ vector<vector<int>> permuteUnique(vector<int>& nums);
 //https://leetcode.cn/problems/permutation-sequence/description/
 string getPermutation(int n, int k);
 
+// 这题非排列问题, 也不好做
+// https://leetcode.cn/problems/next-permutation
+void nextPermutation(std::vector<int>& nums);
+
 //https://leetcode.cn/problems/letter-case-permutation/
 vector<string> letterCasePermutation(string s);
 
