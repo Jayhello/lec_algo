@@ -81,7 +81,7 @@ vector<vector<int>> permuteUnique(vector<int>& nums){
     return vRes;
 }
 
-vector<string> letterCasePermutation(string s){
+vector<string> helper784letterCasePermutation(string s){
     vector<string> vStr;
     for(auto c : s){
         if(vStr.empty()){
@@ -107,6 +107,102 @@ vector<string> letterCasePermutation(string s){
     }
 
     return vStr;
+}
+
+
+void helper784(const string& s, string tracks, int idx, vector<string>& res){
+    if(tracks.size() == s.size()){
+        res.push_back(tracks);
+        return ;
+    }
+
+    if(not std::isalpha(s[idx])){
+        tracks.push_back(s[idx]);
+        helper784(s, tracks, idx + 1, res);
+    }else{
+        char c = std::tolower(s[idx]);
+        tracks.push_back(c);
+        helper784(s, tracks, idx + 1, res);
+        tracks.pop_back();
+
+        c = std::toupper(s[idx]);
+        tracks.push_back(c);
+        helper784(s, tracks, idx + 1, res);
+        tracks.pop_back();
+    }
+}
+
+vector<string> letterCasePermutationV2(string s) {
+    string tracks;
+    vector<string> res;
+    helper784(s, tracks, 0, res);
+    return res;
+}
+
+void helper784V3(const string& s, int idx, string& tracks, vector<string>& res){
+    if(tracks.size() == s.size()){
+        res.push_back(tracks);
+        return;
+    }
+
+    for(int i = idx; i < s.size(); ++i){
+        if(i > 0 and tracks.empty()) break;   // 后面的分支不要了
+
+        if(std::isalpha(s[i])){
+            for(int j = 0; j < 2; ++j){
+                char ch = (j % 2 ? std::toupper(s[i]) : std::tolower(s[i]));
+                tracks.push_back(ch);
+                helper784V3(s, i + 1, tracks, res);
+                tracks.pop_back();
+            }
+        }else{
+            tracks.push_back(s[i]);
+            helper784V3(s, i + 1, tracks, res);
+            tracks.pop_back();
+        }
+    }
+}
+
+vector<string> letterCasePermutationV3(string s) {
+    string tracks;
+    vector<string> res;
+    helper784V3(s, 0, tracks, res);
+    return res;
+}
+
+vector<string> letterCasePermutationV5(string str) {
+    vector<string> res;
+    for(auto c : str){
+        if(res.empty()){
+            if(std::isalpha(c)){
+                res.push_back(string(1, std::tolower(c)));
+                res.push_back(string(1, std::toupper(c)));
+            }else{
+                res.push_back(string(1, c));
+            }
+
+            continue;
+        }
+
+        if(std::isalpha(c)){
+            vector<string> vStr = res;
+            for(auto& tmp : vStr){
+                tmp.push_back(std::tolower(c));
+            }
+
+            for(auto& tmp : res){
+                tmp.push_back(std::toupper(c));
+            }
+
+            res.insert(res.end(), vStr.begin(), vStr.end());
+        }else{
+            for(auto& tmp : res){
+                tmp.push_back(c);
+            }
+        }
+    }
+
+    return res;
 }
 
 void helper77(vector<vector<int>>& res, vector<int>& tracks, int b, int e, int k){
