@@ -433,3 +433,108 @@ vector<int> maxSlidingWindow(vector<int>& nums, int k){
 
     return res;
 }
+
+namespace xy{
+
+bool checkInclusion(string s1, string s2) {
+    unordered_map<char, int> mChCnt1;
+    for(auto c : s1)++mChCnt1[c];
+
+    unordered_map<char, int> mChCntWnd;
+    int left = 0, right = 0, len = s2.size();
+    while(right < len){
+        char ch = s2[right++];
+        if(0 == mChCnt1.count(ch)){
+            mChCntWnd.clear();
+            left = right;
+            continue;
+        }
+
+        ++mChCntWnd[ch];
+        while(mChCntWnd[ch] > mChCnt1[ch]){
+            char ch2 = s2[left++];
+            --mChCntWnd[ch2];
+            if(0 == mChCntWnd[ch2]){
+                mChCntWnd.erase(ch2);
+            }
+        }
+
+        if(right - left < s1.size()) continue;
+
+        if(mChCnt1 == mChCntWnd) return true;
+    }
+
+    return false;
+}
+
+int lengthOfLongestSubstring(string s){
+    if(s.empty()) return 0;
+
+    int len = s.size(), left = 0, right = 0;
+    int maxLeft = -1, maxRight = - 1;
+    unordered_map<char, int> mChCnt;
+    while(right < len){
+        char ch = s[right++];
+        ++mChCnt[ch];
+        while(mChCnt[ch] > 1){
+            --mChCnt[s[left++]];
+        }
+
+        if(maxLeft < 0 or (maxRight - maxLeft < right - left)){
+            maxLeft = left;
+            maxRight = right;
+        }
+    }
+    return maxRight - maxLeft;
+}
+
+int minSubArrayLen(int target, vector<int>& nums){
+    int len = nums.size();
+    int left = 0, right = 0, minLen = 0;
+    int sum = 0;
+    while(right < len){
+        sum += nums[right++];
+        while(sum >= target){
+            if(minLen == 0 or right - left < minLen){
+                minLen = right - left;
+            }
+            sum -= nums[left++];
+        }
+    }
+    return minLen;
+}
+
+vector<int> findSubstring(string s, vector<string>& words){
+    vector<int> vec;
+    int len = s.size(), sublen = words[0].size(), num = words.size();
+    if(len < sublen * num){
+        return vec;
+    }
+
+    unordered_map<string, int> mWordCnt;
+    for(const auto& word: words)++mWordCnt[word];
+
+    for(int i = 0; i <= len - sublen * num; ++i){
+        unordered_map<string, int> mSubCnt;
+        for(int k = 0; k < num; ++k){
+            string part = s.substr(i + k * sublen, sublen);
+            auto it = mWordCnt.find(part);
+            if(it == mWordCnt.end()){
+                break;
+            }
+
+            if(++mSubCnt[part] > it->second){
+                break;
+            }
+        }
+
+        if(mSubCnt.size() == mWordCnt.size() and mSubCnt == mWordCnt){
+            vec.push_back(i);
+        }
+    }
+
+    return vec;
+}
+
+
+} // xy

@@ -132,7 +132,7 @@ void helper784(const string& s, string tracks, int idx, vector<string>& res){
     }
 }
 
-vector<string> letterCasePermutationV2(string s) {
+vector<string> letterCasePermutation(string s) {
     string tracks;
     vector<string> res;
     helper784(s, tracks, 0, res);
@@ -923,4 +923,110 @@ int ladderLength(string beginWord, string endWord, vector<string>& wordList){
     helper127(endWord, wordList, vPath, visited, minLen);
 
     return INT_MAX == minLen ? 0 : minLen;
+}
+
+namespace test{
+void helper30(const string& str, const vector<string>& words, string substr,
+	vector<bool>& visited, int idx, vector<int>& res){
+     if(substr.size() == words[0].size() * words.size()){
+		res.push_back(idx);
+
+		size_t pos = idx + 1;
+		while(true){
+            auto nidx = str.find(substr, pos);
+            if(nidx == string::npos)break;
+            res.push_back(nidx);
+            pos = nidx + 1;
+		}
+
+		return;
+	 }
+
+	 for(int i = 0; i < words.size(); ++i){
+		if(visited[i]) continue;
+		if(i > 0  and words[i] == words[i - 1] and (not visited[i - 1])) continue;
+		string tmp = substr + words[i];
+		if(tmp.size() > str.size())break;
+		auto pos = str.find(tmp);
+		if(string::npos == pos) continue;
+		visited[i] = true;
+		helper30(str, words, tmp, visited, pos, res);
+		visited[i] = false;
+	 }
+}
+
+vector<int> findSubstring(string s, vector<string>& words) {
+    std::stable_sort(words.begin(), words.end());
+	vector<int> res;
+	vector<bool> visited(words.size(), false);
+	helper30(s, words, "", visited, 0, res);
+	return res;
+}
+
+bool match(const vector<string>& matrix, int r, int c){
+    int col = matrix[0].size();
+
+    for(int i = 0; i < r; ++i){    // 检查同一列
+        if(matrix[i][c] == 'Q')return false;
+    }
+
+    for(int k = 1; r - k >= 0 and c - k >= 0; ++k){
+        if(matrix[r - k][c - k] == 'Q') return false;
+    }
+
+    for(int k = 1; r - k >= 0 and c + k < col; ++k){
+        if(matrix[r - k][c + k] == 'Q') return false;
+    }
+
+    return true;
+}
+
+void helper(int n, int r, vector<string>& matrix, vector<vector<string>>& res){
+    if(r == n){
+        res.push_back(matrix);
+        return;
+    }
+
+    for(int c = 0; c < n; ++c){
+        matrix[r][c] = 'Q';
+
+        if(not match(matrix, r, c)){
+            matrix[r][c] = '.';
+            continue;
+        }
+
+        helper(n, r + 1, matrix, res);
+        matrix[r][c] = '.';
+    }
+}
+
+vector<vector<string>> solveNQueens(int n){
+    vector<vector<string>> res;
+    vector<string> matrix(n, string(n, '.'));
+    helper(n, 0, matrix, res);
+    return res;
+}
+
+
+void helper491(const vector<int>& nums, int idx, vector<int>& tracks, vector<vector<int>>&res){
+    if(tracks.size() > 1){
+        res.push_back(tracks);
+    }
+    for(int i = idx; i < nums.size(); ++i){
+        if(not tracks.empty() and tracks.back() > nums[i]) continue;
+        tracks.push_back(nums[i]);
+        helper491(nums, i + 1, tracks, res);
+        tracks.pop_back();
+    }
+}
+
+vector<vector<int>> findSubsequences(vector<int>& nums) {
+    vector<vector<int>> res;
+    vector<int> tracks;
+    helper491(nums, 0, tracks, res);
+    return res;
+}
+
+
+
 }

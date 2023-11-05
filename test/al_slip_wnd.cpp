@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <unordered_map>
 #include <gtest/gtest.h>
 #include "src/al_slip_wnd.h"
 

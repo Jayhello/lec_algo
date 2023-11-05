@@ -6,9 +6,71 @@
 #include <gtest/gtest.h>
 #include "src/al_bt.h"
 
+namespace test{
+bool match(const vector<vector<char>>& board, int r, int c, char ch){
+    for(int i = 0; i < 9; ++i){  // 同一行
+        if(board[r][i] == ch) return false;
+    }
+
+    for(int i = 0; i < 9; ++i){  // 同一列
+        if(board[i][c] == ch) return false;
+    }
+
+    int row = r / 3, col = c / 3;
+    for(int i = 0; i <= 2; ++i){
+        for(int j = 0; j <= 2; ++j){
+            int m = row * 3 + i, k = col * 3 + j;
+            if(board[m][k] == ch) return false;
+        }
+    }
+
+    return true;
+}
+
+void helper37(vector<vector<char>>& board, int row, int col, bool& found){
+    if(row == 9){
+        found = true;
+        return;
+    }
+
+    for(int r = row; r < 9 and not found; ++r){
+        for(int c = col; c < 9 and not found; ++c){
+//            printf("r: %d, c: %d \n", r, c);
+            if(8 == r and 8 == c and '.' != board[r][c]){
+                helper37(board, 9, 0, found);
+                break;
+            }
+
+            if('.' != board[r][c]) continue;
+
+            for(int n = 1; n <= 9 and not found; ++n){
+                if(not match(board, r, c, n + '0')) continue;
+                board[r][c] = n + '0';
+                int next_col = c + 1, next_row = r;
+                if(next_col == 9){
+                    next_col = 0;
+                    next_row += 1;
+                }
+                helper37(board, next_row, next_col, found);
+                if(not found) board[r][c] = '.';
+            }
+        }
+    }
+}
+
+void solveSudoku2(vector<vector<char>>& board) {
+    bool found = false;
+    helper37(board, 0, 0, found);
+}
+
+} // test
+
 int main(int argc, char** argv){
+    vector<vector<char>> board = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+    test::solveSudoku2(board);
+
     testing::InitGoogleTest(&argc, argv);
-    testing::FLAGS_gtest_filter = "wordBreak*";
+//    testing::FLAGS_gtest_filter = "wordBreak*";
     return RUN_ALL_TESTS();
 
     return 0;

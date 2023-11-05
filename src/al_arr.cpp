@@ -886,3 +886,69 @@ int findMin(vector<int>& nums) {
     }
     return - 1;
 }
+
+bool searchMatrix(vector<vector<int>>& matrix, int target){
+    int row = matrix.size(), col = matrix[0].size();
+    int r = 0, c = col - 1;
+    while(r < row and c >= 0){
+        if(matrix[r][c] == target){
+            return true;
+        }else if(target < matrix[r][c]){
+            c -= 1;
+        }else{
+            r += 1;
+        }
+    }
+
+    return false;
+}
+
+uint32_t reverseBits(uint32_t n){
+    uint32_t res = 0;
+//    while(n){
+    for(int i = 0;i < 32; ++i){
+        res = (res << 1) | (n & 1);
+        n >>= 1;
+    }
+
+    return res;
+}
+
+int hammingWeight(uint32_t n) {
+    int ret = 0;
+    while(n){
+        ret += ((n & 1) ? 1 : 0);
+        n >>= 1;
+    }
+    return ret;
+}
+
+
+long reverse(int x){
+    long ret = 0;
+    long a = x;
+    bool bMinus = false;
+    if(a < 0){
+        a = -a;
+        bMinus = true;
+    }
+    while(a){
+        ret = ret * 10 + a % 10;
+        a /= 10;
+    }
+    if(ret > INT_MAX) return 0;
+    return bMinus ? -ret : ret;
+}
+
+bool canConstruct(string ransomNote, string magazine){
+    unordered_map<char, int> mChCnt;
+    for(auto c : magazine)++mChCnt[c];
+
+    for(auto c : ransomNote){
+        if(--mChCnt[c] < 0){
+            return false;
+        }
+    }
+
+    return true;
+}
